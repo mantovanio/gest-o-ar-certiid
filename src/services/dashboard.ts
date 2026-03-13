@@ -1,10 +1,6 @@
 import { supabase } from '@/lib/supabase/client'
 
 export const getDashboardMetrics = async () => {
-  // Mocking calculations that would normally be done via SQL aggregations
-  // For demonstration, we'll fetch some raw data and calculate,
-  // or return fixed values if table is empty
-
   try {
     const { data: certs } = await supabase
       .from('certificates')
@@ -14,7 +10,6 @@ export const getDashboardMetrics = async () => {
       certs?.reduce((acc, curr) => acc + (Number(curr.valor_oportunidade) || 0), 0) || 15400.0
     const vendas = certs?.length || 42
 
-    // Certificados a vencer in 30 days
     const aVencer =
       certs?.filter((c) => {
         if (!c.data_expiracao) return false
@@ -27,8 +22,9 @@ export const getDashboardMetrics = async () => {
 
     const { count: leadsCount } = await supabase
       .from('crm_agente_ia')
-      .select('*', { count: 'exact', head: true })
+      .select('id', { count: 'exact' })
       .eq('status_lead', 'novo')
+      .limit(1)
 
     return {
       totalVendasMensal: vendas,

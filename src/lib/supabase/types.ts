@@ -45,6 +45,39 @@ export type Database = {
         }
         Relationships: []
       }
+      bank_accounts: {
+        Row: {
+          account_number: string | null
+          active: boolean | null
+          agency: string | null
+          bank_number: string | null
+          bank_type: string | null
+          created_at: string | null
+          id: string
+          owner_document: string | null
+        }
+        Insert: {
+          account_number?: string | null
+          active?: boolean | null
+          agency?: string | null
+          bank_number?: string | null
+          bank_type?: string | null
+          created_at?: string | null
+          id?: string
+          owner_document?: string | null
+        }
+        Update: {
+          account_number?: string | null
+          active?: boolean | null
+          agency?: string | null
+          bank_number?: string | null
+          bank_type?: string | null
+          created_at?: string | null
+          id?: string
+          owner_document?: string | null
+        }
+        Relationships: []
+      }
       certificates: {
         Row: {
           certificado_tipo: string | null
@@ -345,6 +378,48 @@ export type Database = {
         }
         Relationships: []
       }
+      financial_transactions: {
+        Row: {
+          created_at: string | null
+          description: string | null
+          due_date: string | null
+          face_value: number | null
+          id: string
+          open_value: number | null
+          payee_payer: string | null
+          payment_date: string | null
+          payment_method: string | null
+          status: string | null
+          type: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          description?: string | null
+          due_date?: string | null
+          face_value?: number | null
+          id?: string
+          open_value?: number | null
+          payee_payer?: string | null
+          payment_date?: string | null
+          payment_method?: string | null
+          status?: string | null
+          type?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          description?: string | null
+          due_date?: string | null
+          face_value?: number | null
+          id?: string
+          open_value?: number | null
+          payee_payer?: string | null
+          payment_date?: string | null
+          payment_method?: string | null
+          status?: string | null
+          type?: string | null
+        }
+        Relationships: []
+      }
       Itens_Produto: {
         Row: {
           DataValidade: string | null
@@ -373,6 +448,39 @@ export type Database = {
             referencedColumns: ['Pedido_ID']
           },
         ]
+      }
+      media_inventory: {
+        Row: {
+          created_at: string | null
+          id: string
+          is_comodato: boolean | null
+          media_type: string | null
+          observation: string | null
+          quantity: number | null
+          stock_date: string | null
+          unit_cost: number | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          is_comodato?: boolean | null
+          media_type?: string | null
+          observation?: string | null
+          quantity?: number | null
+          stock_date?: string | null
+          unit_cost?: number | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          is_comodato?: boolean | null
+          media_type?: string | null
+          observation?: string | null
+          quantity?: number | null
+          stock_date?: string | null
+          unit_cost?: number | null
+        }
+        Relationships: []
       }
       n8n_chat_histories: {
         Row: {
@@ -806,6 +914,15 @@ export const Constants = {
 //   endereco_completo: text (nullable)
 //   cidade_uf: text (nullable)
 //   created_at: timestamp with time zone (nullable, default: now())
+// Table: bank_accounts
+//   id: uuid (not null, default: gen_random_uuid())
+//   active: boolean (nullable, default: true)
+//   bank_type: text (nullable)
+//   bank_number: text (nullable)
+//   agency: text (nullable)
+//   account_number: text (nullable)
+//   owner_document: text (nullable)
+//   created_at: timestamp with time zone (nullable, default: now())
 // Table: certificates
 //   id: uuid (not null, default: gen_random_uuid())
 //   user_id: uuid (nullable)
@@ -878,6 +995,27 @@ export const Constants = {
 //   status: text (nullable, default: 'pendente'::text)
 //   file_path: text (nullable)
 //   created_at: timestamp with time zone (not null, default: timezone('utc'::text, now()))
+// Table: financial_transactions
+//   id: uuid (not null, default: gen_random_uuid())
+//   type: text (nullable)
+//   status: text (nullable)
+//   due_date: date (nullable)
+//   payment_date: date (nullable)
+//   face_value: numeric (nullable)
+//   open_value: numeric (nullable)
+//   description: text (nullable)
+//   payee_payer: text (nullable)
+//   payment_method: text (nullable)
+//   created_at: timestamp with time zone (nullable, default: now())
+// Table: media_inventory
+//   id: uuid (not null, default: gen_random_uuid())
+//   media_type: text (nullable)
+//   quantity: integer (nullable)
+//   unit_cost: numeric (nullable)
+//   is_comodato: boolean (nullable, default: false)
+//   stock_date: date (nullable)
+//   observation: text (nullable)
+//   created_at: timestamp with time zone (nullable, default: now())
 // Table: n8n_chat_histories
 //   id: integer (not null)
 //   session_id: character varying (not null)
@@ -948,6 +1086,8 @@ export const Constants = {
 //   UNIQUE agents_cpf_agente_key: UNIQUE (cpf_agente)
 //   PRIMARY KEY agents_pkey: PRIMARY KEY (id)
 //   FOREIGN KEY agents_user_id_fkey: FOREIGN KEY (user_id) REFERENCES auth.users(id)
+// Table: bank_accounts
+//   PRIMARY KEY bank_accounts_pkey: PRIMARY KEY (id)
 // Table: certificates
 //   PRIMARY KEY certificates_pkey: PRIMARY KEY (id)
 //   FOREIGN KEY certificates_user_id_fkey: FOREIGN KEY (user_id) REFERENCES auth.users(id)
@@ -960,6 +1100,10 @@ export const Constants = {
 //   PRIMARY KEY documents_pkey: PRIMARY KEY (id)
 //   CHECK documents_status_check: CHECK ((status = ANY (ARRAY['pendente'::text, 'validado'::text, 'rejeitado'::text])))
 //   FOREIGN KEY documents_user_id_fkey: FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE
+// Table: financial_transactions
+//   PRIMARY KEY financial_transactions_pkey: PRIMARY KEY (id)
+// Table: media_inventory
+//   PRIMARY KEY media_inventory_pkey: PRIMARY KEY (id)
 // Table: n8n_chat_histories
 //   PRIMARY KEY n8n_chat_histories_pkey: PRIMARY KEY (id)
 // Table: partner_leads
@@ -984,6 +1128,9 @@ export const Constants = {
 // Table: agents
 //   Policy "Gerenciar agentes" (ALL, PERMISSIVE) roles={public}
 //     USING: (auth.uid() = user_id)
+// Table: bank_accounts
+//   Policy "Allow all access bank_accounts" (ALL, PERMISSIVE) roles={public}
+//     USING: true
 // Table: certificates
 //   Policy "Acesso total ao dono dos dados" (ALL, PERMISSIVE) roles={public}
 //     USING: (auth.uid() = user_id)
@@ -1001,6 +1148,12 @@ export const Constants = {
 //     WITH CHECK: (auth.uid() = user_id)
 //   Policy "Usuários podem ver seus próprios documentos" (SELECT, PERMISSIVE) roles={public}
 //     USING: (auth.uid() = user_id)
+// Table: financial_transactions
+//   Policy "Allow all access financial_transactions" (ALL, PERMISSIVE) roles={public}
+//     USING: true
+// Table: media_inventory
+//   Policy "Allow all access media_inventory" (ALL, PERMISSIVE) roles={public}
+//     USING: true
 // Table: partner_leads
 //   Policy "politica de privacidade" (ALL, PERMISSIVE) roles={public}
 //     USING: true

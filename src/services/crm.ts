@@ -16,8 +16,9 @@ export const getLeads = async () => {
 export const getNewLeadsCount = async () => {
   const { count, error } = await supabase
     .from('crm_agente_ia')
-    .select('*', { count: 'exact', head: true })
+    .select('id', { count: 'exact' })
     .eq('status_lead', 'novo')
+    .limit(1)
 
   if (error) {
     console.error('Error fetching new leads count:', error)
