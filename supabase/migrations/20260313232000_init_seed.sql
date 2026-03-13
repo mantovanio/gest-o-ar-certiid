@@ -1,4 +1,4 @@
-DO $
+DO $$
 DECLARE
   new_user_id uuid;
 BEGIN
@@ -36,7 +36,7 @@ BEGIN
 
   -- Seed CRM Agente IA (Kanban)
   INSERT INTO public.crm_agente_ia (
-    id, identificador_usuario, nome, whatsapp, Produto, status_lead, data_vencimento_certificado
+    id, identificador_usuario, nome, whatsapp, "Produto", status_lead, data_vencimento_certificado
   ) VALUES 
   (gen_random_uuid(), 'lead-001', 'João Pereira', '+5511999990001', 'e-CPF A1', 'novo', '2024-05-20'),
   (gen_random_uuid(), 'lead-002', 'Maria Antonieta', '+5511999990002', 'e-CNPJ A3', 'em_atendimento', '2024-04-10'),
@@ -44,4 +44,4 @@ BEGIN
   (gen_random_uuid(), 'lead-004', 'Padaria Central', '+5511999990004', 'e-CNPJ A3', 'aguardando_doc', '2024-03-25'),
   (gen_random_uuid(), 'lead-005', 'Consultoria XP', '+5511999990005', 'e-CPF A3', 'em_emissao', '2024-03-30');
 
-END $;
+END $$;
