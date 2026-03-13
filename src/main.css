@@ -6,7 +6,7 @@
 
 @layer base {
   :root {
-    --background: 210 20% 98%; /* bg-gray-100 equivalent for base */
+    --background: 210 20% 98%;
     --foreground: 222.2 84% 4.9%;
 
     --card: 0 0% 100%;
@@ -15,7 +15,6 @@
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
 
-    /* Corporate Blue */
     --primary: 211 100% 35%;
     --primary-foreground: 210 40% 98%;
 
@@ -42,24 +41,23 @@
     --sidebar-foreground: 0 0% 100%;
     --sidebar-primary: 24 98% 53%; /* Orange */
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 210 26% 32%; /* Hover graphite */
+    --sidebar-accent: 210 26% 32%;
     --sidebar-accent-foreground: 0 0% 100%;
     --sidebar-border: 210 26% 20%;
     --sidebar-ring: 24 98% 53%;
 
-    --brand-orange: 24 98% 53%; /* #f97316 */
+    --brand-orange: 24 98% 53%;
 
-    --chart-1: 211 100% 35%; /* Blue */
-    --chart-2: 24 98% 53%; /* Orange */
-    --chart-3: 160 84% 39%; /* Teal */
-    --chart-4: 210 26% 25%; /* Graphite */
-    --chart-5: 0 84% 60%; /* Red */
+    --chart-1: 211 100% 35%;
+    --chart-2: 24 98% 53%;
+    --chart-3: 160 84% 39%;
+    --chart-4: 210 26% 25%;
+    --chart-5: 0 84% 60%;
   }
 
   .dark {
     --background: 222.2 84% 4.9%;
     --foreground: 210 40% 98%;
-    /* ... keep default dark vars or adjust as needed, but spec implies mostly light mode admin ... */
   }
 
   * {
@@ -69,11 +67,6 @@
     @apply bg-background text-foreground;
     font-family: 'Inter', sans-serif;
   }
-
-  section[aria-label='Notifications alt+T'] {
-    padding: 0 !important;
-    margin: 0 !important;
-  }
 }
 
 @layer utilities {
@@ -82,5 +75,11 @@
   }
   .text-brand-orange {
     color: hsl(var(--brand-orange));
+  }
+  .table-zebra tbody tr:nth-child(odd) {
+    @apply bg-white;
+  }
+  .table-zebra tbody tr:nth-child(even) {
+    @apply bg-slate-50;
   }
 }

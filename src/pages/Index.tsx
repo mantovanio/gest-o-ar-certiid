@@ -11,7 +11,6 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { getDashboardMetrics } from '@/services/dashboard'
-import { formatCurrency } from '@/lib/utils'
 import { CommunicationDrawer } from '@/components/CommunicationDrawer'
 
 const Index = () => {
@@ -25,17 +24,14 @@ const Index = () => {
   const [drawerOpen, setDrawerOpen] = useState(false)
 
   useEffect(() => {
-    const fetchMetrics = async () => {
-      const data = await getDashboardMetrics()
+    getDashboardMetrics().then((data) => {
       setMetrics(data)
       setLoading(false)
-    }
-    fetchMetrics()
+    })
   }, [])
 
-  const formatBRL = (value: number) => {
-    return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value)
-  }
+  const formatBRL = (value: number) =>
+    new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value)
 
   return (
     <div className="space-y-6 animate-fade-in">
@@ -45,17 +41,17 @@ const Index = () => {
           <p className="text-muted-foreground text-sm">Resumo gerencial das suas operações.</p>
         </div>
         <div className="flex gap-2">
-          <Button className="bg-brand-orange hover:bg-orange-600 text-white">
+          <Button className="bg-[#f97316] hover:bg-orange-600 text-white">
             <UserPlus className="mr-2 h-4 w-4" /> Cadastrar Cliente
           </Button>
-          <Button>
+          <Button className="bg-blue-600 hover:bg-blue-700 text-white">
             <PlusCircle className="mr-2 h-4 w-4" /> Lançar Nova Venda
           </Button>
         </div>
       </div>
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <Card className="shadow-sm border-slate-200 hover:shadow-md transition-shadow">
+        <Card className="shadow-sm border-slate-200">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium text-slate-600">
               Total de Vendas Mensal
@@ -69,8 +65,7 @@ const Index = () => {
             <p className="text-xs text-muted-foreground mt-1">+12% em relação ao mês anterior</p>
           </CardContent>
         </Card>
-
-        <Card className="shadow-sm border-slate-200 hover:shadow-md transition-shadow">
+        <Card className="shadow-sm border-slate-200">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium text-slate-600">
               Certificados a Vencer
@@ -84,8 +79,7 @@ const Index = () => {
             <p className="text-xs text-muted-foreground mt-1">Nos próximos 30 dias</p>
           </CardContent>
         </Card>
-
-        <Card className="shadow-sm border-slate-200 hover:shadow-md transition-shadow">
+        <Card className="shadow-sm border-slate-200">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium text-slate-600">Faturamento Bruto</CardTitle>
             <DollarSign className="h-4 w-4 text-emerald-600" />
@@ -97,9 +91,8 @@ const Index = () => {
             <p className="text-xs text-muted-foreground mt-1">+8% em relação ao mês anterior</p>
           </CardContent>
         </Card>
-
         <Card
-          className="shadow-sm border-slate-200 hover:shadow-md transition-shadow cursor-pointer"
+          className="shadow-sm border-slate-200 cursor-pointer"
           onClick={() => setDrawerOpen(true)}
         >
           <CardHeader className="flex flex-row items-center justify-between pb-2">
@@ -115,10 +108,10 @@ const Index = () => {
         </Card>
       </div>
 
-      <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-7">
+      <div className="grid gap-4 grid-cols-1 lg:grid-cols-7">
         <Card className="col-span-1 lg:col-span-4 shadow-sm border-slate-200">
           <CardHeader>
-            <CardTitle className="text-base">Últimas Interações (Activity Feed)</CardTitle>
+            <CardTitle className="text-base">Últimas Interações</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
@@ -131,13 +124,8 @@ const Index = () => {
                     <Activity className="h-4 w-4" />
                   </div>
                   <div className="flex-1 space-y-1">
-                    <p className="text-sm font-medium leading-none">
-                      WhatsApp enviado para João Pereira
-                    </p>
-                    <p className="text-sm text-muted-foreground">
-                      Lembrete de renovação de certificado A1 enviado pelo sistema.
-                    </p>
-                    <p className="text-xs text-slate-400">Hoje, às 10:45</p>
+                    <p className="text-sm font-medium">WhatsApp enviado para Cliente {i}</p>
+                    <p className="text-sm text-muted-foreground">Lembrete de renovação enviado.</p>
                   </div>
                 </div>
               ))}
@@ -145,10 +133,8 @@ const Index = () => {
           </CardContent>
         </Card>
       </div>
-
       <CommunicationDrawer open={drawerOpen} onOpenChange={setDrawerOpen} />
     </div>
   )
 }
-
 export default Index
