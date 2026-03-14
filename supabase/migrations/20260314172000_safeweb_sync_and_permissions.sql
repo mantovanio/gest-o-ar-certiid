@@ -27,7 +27,11 @@ DO $$
 BEGIN
   IF EXISTS (SELECT 1 FROM pg_extension WHERE extname = 'pg_cron') AND EXISTS (SELECT 1 FROM pg_extension WHERE extname = 'pg_net') THEN
     -- Remove if already exists to safely replace
-    PERFORM cron.unschedule('sincronizar-safeweb-job');
+    BEGIN
+      PERFORM cron.unschedule('sincronizar-safeweb-job');
+    EXCEPTION WHEN OTHERS THEN
+      -- Ignore error if job does not exist
+    END;
     
     PERFORM cron.schedule(
       'sincronizar-safeweb-job',
