@@ -14,6 +14,7 @@ import { Label } from '@/components/ui/label'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { toast } from '@/hooks/use-toast'
 import { usePermissions } from '@/hooks/use-permissions'
+import { triggerN8nWhatsApp } from '@/services/n8n'
 
 interface CommunicationDrawerProps {
   open: boolean
@@ -24,10 +25,12 @@ interface CommunicationDrawerProps {
 export function CommunicationDrawer({ open, onOpenChange, clientData }: CommunicationDrawerProps) {
   const [message, setMessage] = useState('')
   const [activeTab, setActiveTab] = useState('whatsapp')
+  const [isSending, setIsSending] = useState(false)
+
   const { hasPermission } = usePermissions()
   const canSendMessage = hasPermission('enviar_mensagens')
 
-  const handleSend = () => {
+  const handleSend = async () => {
     if (!canSendMessage) {
       toast({
         title: 'Acesso Negado',
@@ -48,22 +51,36 @@ export function CommunicationDrawer({ open, onOpenChange, clientData }: Communic
         return
       }
 
-      const url = `https://wa.me/${sanitizedPhone}?text=${encodeURIComponent(message)}`
-      window.open(url, '_blank')
-
-      toast({
-        title: 'WhatsApp Aberto',
-        description: `Iniciando conversa com ${clientData?.name || 'o cliente'}.`,
-      })
+      setIsSending(true)
+      try {
+        await triggerN8nWhatsApp(sanitizedPhone, message)
+        toast({
+          title: 'Sucesso',
+          description: `Mensagem enviada para automação (n8n) com sucesso.`,
+        })
+        setMessage('')
+        onOpenChange(false)
+      } catch (err) {
+        console.error('N8n error:', err)
+        toast({
+          title: 'Fallback Web Ativado',
+          description: 'Falha na automação, abrindo WhatsApp Web...',
+        })
+        const url = `https://wa.me/${sanitizedPhone}?text=${encodeURIComponent(message)}`
+        window.open(url, '_blank')
+        setMessage('')
+        onOpenChange(false)
+      } finally {
+        setIsSending(false)
+      }
     } else {
       toast({
         title: 'Mensagem Enviada',
         description: `E-mail enviado com sucesso para ${clientData?.name || 'o cliente'}.`,
       })
+      setMessage('')
+      onOpenChange(false)
     }
-
-    setMessage('')
-    onOpenChange(false)
   }
 
   return (
@@ -81,17 +98,24 @@ export function CommunicationDrawer({ open, onOpenChange, clientData }: Communic
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="flex-1 flex flex-col">
           <TabsList className="grid w-full grid-cols-2 mb-4">
-            <TabsTrigger value="whatsapp">WhatsApp</TabsTrigger>
-            <TabsTrigger value="email">E-mail</TabsTrigger>
+            <TabsTrigger value="whatsapp" disabled={isSending}>
+              WhatsApp
+            </TabsTrigger>
+            <TabsTrigger value="email" disabled={isSending}>
+              E-mail
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="whatsapp" className="flex-1 flex flex-col space-y-4">
-            <fieldset disabled={!canSendMessage} className="space-y-4 flex-1 flex flex-col">
+            <fieldset
+              disabled={!canSendMessage || isSending}
+              className="space-y-4 flex-1 flex flex-col"
+            >
               <div className="space-y-2">
                 <Label>Número do Cliente</Label>
                 <div className="flex gap-2">
                   <Input value={clientData?.phone || ''} readOnly className="bg-slate-50" />
-                  <Button variant="outline" size="icon" disabled={!canSendMessage}>
+                  <Button variant="outline" size="icon" disabled={!canSendMessage || isSending}>
                     <Phone className="h-4 w-4" />
                   </Button>
                 </div>
@@ -116,7 +140,7 @@ export function CommunicationDrawer({ open, onOpenChange, clientData }: Communic
                     onClick={() =>
                       setMessage('Olá! Seu certificado digital está vencendo. Vamos renovar?')
                     }
-                    disabled={!canSendMessage}
+                    disabled={!canSendMessage || isSending}
                   >
                     Renovação
                   </Button>
@@ -128,7 +152,7 @@ export function CommunicationDrawer({ open, onOpenChange, clientData }: Communic
                         'Olá, aguardamos o envio da documentação pendente para prosseguirmos com a emissão.',
                       )
                     }
-                    disabled={!canSendMessage}
+                    disabled={!canSendMessage || isSending}
                   >
                     Doc Pendente
                   </Button>
@@ -138,15 +162,19 @@ export function CommunicationDrawer({ open, onOpenChange, clientData }: Communic
 
             <Button
               onClick={handleSend}
-              disabled={!canSendMessage}
+              disabled={!canSendMessage || isSending}
               className="w-full mt-auto bg-green-600 hover:bg-green-700 text-white disabled:opacity-50"
             >
-              <Send className="mr-2 h-4 w-4" /> Abrir no WhatsApp
+              <Send className="mr-2 h-4 w-4" />
+              {isSending ? 'Enviando...' : 'Enviar WhatsApp'}
             </Button>
           </TabsContent>
 
           <TabsContent value="email" className="flex-1 flex flex-col space-y-4">
-            <fieldset disabled={!canSendMessage} className="space-y-4 flex-1 flex flex-col">
+            <fieldset
+              disabled={!canSendMessage || isSending}
+              className="space-y-4 flex-1 flex flex-col"
+            >
               <div className="space-y-2">
                 <Label>E-mail do Cliente</Label>
                 <Input value={clientData?.email || ''} readOnly className="bg-slate-50" />
@@ -162,7 +190,7 @@ export function CommunicationDrawer({ open, onOpenChange, clientData }: Communic
             </fieldset>
             <Button
               onClick={handleSend}
-              disabled={!canSendMessage}
+              disabled={!canSendMessage || isSending}
               className="w-full mt-auto bg-blue-600 hover:bg-blue-700 text-white disabled:opacity-50"
             >
               <Mail className="mr-2 h-4 w-4" /> Enviar E-mail

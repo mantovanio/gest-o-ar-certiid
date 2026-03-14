@@ -1,8 +1,12 @@
+import { useState } from 'react'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Share2 } from 'lucide-react'
+import { useToast } from '@/hooks/use-toast'
+import { triggerN8nPedido } from '@/services/n8n'
 import {
   Select,
   SelectContent,
@@ -34,6 +38,9 @@ export function PedidoForm({
   isSaving,
   dropdownData,
 }: PedidoFormProps) {
+  const { toast } = useToast()
+  const [isSendingN8n, setIsSendingN8n] = useState(false)
+
   const vendedores = dropdownData.usuarios.filter(
     (u) =>
       !u.role ||
@@ -46,6 +53,24 @@ export function PedidoForm({
       ['agente'].includes(u.role?.toLowerCase()) ||
       ['agente'].includes(u.tipo_usuario?.toLowerCase()),
   )
+
+  const handleEnviarN8n = async () => {
+    if (!formData.id) return
+    setIsSendingN8n(true)
+    try {
+      await triggerN8nPedido(formData.id)
+      toast({ title: 'Sucesso', description: 'Pedido enviado para automação (n8n).' })
+    } catch (e) {
+      console.error(e)
+      toast({
+        title: 'Erro',
+        description: 'Falha ao enviar pedido para o n8n.',
+        variant: 'destructive',
+      })
+    } finally {
+      setIsSendingN8n(false)
+    }
+  }
 
   const FormSelect = ({
     label,
@@ -192,14 +217,30 @@ export function PedidoForm({
           </div>
         </div>
 
-        <div className="flex gap-2 justify-end pt-4 border-t border-slate-100 mt-6">
-          <Button variant="outline" onClick={onCancel} disabled={isSaving}>
+        <div className="flex gap-2 justify-end pt-4 border-t border-slate-100 mt-6 flex-wrap">
+          {formData.id && (
+            <Button
+              variant="outline"
+              onClick={handleEnviarN8n}
+              disabled={isSaving || isSendingN8n}
+              className="mr-auto text-blue-600 border-blue-200 hover:bg-blue-50"
+            >
+              <Share2 className="w-4 h-4 mr-2" />
+              {isSendingN8n ? 'Enviando...' : 'Enviar p/ Automação'}
+            </Button>
+          )}
+
+          <Button variant="outline" onClick={onCancel} disabled={isSaving || isSendingN8n}>
             Cancelar
           </Button>
-          <Button variant="ghost" onClick={onClear} disabled={isSaving}>
+          <Button variant="ghost" onClick={onClear} disabled={isSaving || isSendingN8n}>
             Limpar
           </Button>
-          <Button onClick={onSave} disabled={isSaving} className="bg-blue-600 hover:bg-blue-700">
+          <Button
+            onClick={onSave}
+            disabled={isSaving || isSendingN8n}
+            className="bg-blue-600 hover:bg-blue-700"
+          >
             {isSaving ? 'Salvando...' : 'Salvar Pedido'}
           </Button>
         </div>
