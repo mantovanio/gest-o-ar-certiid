@@ -10,6 +10,8 @@ import {
   Settings,
   Home,
   ShieldCheck,
+  Activity,
+  MapPin,
 } from 'lucide-react'
 import {
   Sidebar,
@@ -37,6 +39,12 @@ export function AppSidebar() {
     { name: 'Clientes', href: '/clientes', icon: Users, show: hasPermission('ver_clientes') },
     { name: 'Pedidos', href: '/pedidos', icon: ShoppingCart, show: hasPermission('ver_pedidos') },
     {
+      name: 'Rastreamento',
+      href: '/rastreamento-certificados',
+      icon: Activity,
+      show: hasPermission('rastreamento'),
+    },
+    {
       name: 'Agendamentos',
       href: '/agendamentos',
       icon: Calendar,
@@ -61,6 +69,12 @@ export function AppSidebar() {
       show: hasPermission('ver_relatorios'),
     },
     { name: 'Usuários', href: '/usuarios', icon: UserPlus, show: hasPermission('ver_usuarios') },
+    {
+      name: 'Tabelas de Preço',
+      href: '/tabelas-preco',
+      icon: DollarSign,
+      show: hasPermission('tabelas_preco'),
+    },
     {
       name: 'Configurações',
       href: '#config',

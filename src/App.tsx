@@ -17,6 +17,7 @@ import ComissoesPage from '@/pages/ComissoesPage'
 import ConfiguracaoComissoesPage from '@/pages/ConfiguracaoComissoesPage'
 import UsuariosPage from '@/pages/usuarios/UsuariosPage'
 import PermissoesPage from '@/pages/configuracoes/PermissoesPage'
+import TabelasPrecoPage from '@/pages/configuracoes/TabelasPreco'
 
 import PagarReceber from '@/pages/financeiro/PagarReceber'
 import ContasBancarias from '@/pages/financeiro/ContasBancarias'
@@ -24,6 +25,7 @@ import ContasBancarias from '@/pages/financeiro/ContasBancarias'
 import Clientes from '@/pages/vendas/Clientes'
 import Renovacoes from '@/pages/vendas/Renovacoes'
 import CertificadosEmitidos from '@/pages/vendas/CertificadosEmitidos'
+import RastreamentoPage from '@/pages/vendas/RastreamentoCertificados'
 
 import VendasGraficos from '@/pages/graficos/Vendas'
 import FinanceiroGraficos from '@/pages/graficos/Financeiro'
@@ -63,6 +65,14 @@ const App = () => (
                   }
                 />
                 <Route
+                  path="/rastreamento-certificados"
+                  element={
+                    <RequirePermission permissions={['rastreamento']}>
+                      <RastreamentoPage />
+                    </RequirePermission>
+                  }
+                />
+                <Route
                   path="/agendamentos"
                   element={
                     <RequirePermission permissions={['ver_agendamentos']}>
@@ -95,6 +105,14 @@ const App = () => (
                   element={
                     <RequirePermission permissions={['ver_usuarios']}>
                       <UsuariosPage />
+                    </RequirePermission>
+                  }
+                />
+                <Route
+                  path="/tabelas-preco"
+                  element={
+                    <RequirePermission permissions={['tabelas_preco']}>
+                      <TabelasPrecoPage />
                     </RequirePermission>
                   }
                 />

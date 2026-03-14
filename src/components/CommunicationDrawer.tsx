@@ -23,6 +23,7 @@ interface CommunicationDrawerProps {
 
 export function CommunicationDrawer({ open, onOpenChange, clientData }: CommunicationDrawerProps) {
   const [message, setMessage] = useState('')
+  const [activeTab, setActiveTab] = useState('whatsapp')
   const { hasPermission } = usePermissions()
   const canSendMessage = hasPermission('enviar_mensagens')
 
@@ -36,10 +37,31 @@ export function CommunicationDrawer({ open, onOpenChange, clientData }: Communic
       return
     }
 
-    toast({
-      title: 'Mensagem Enviada',
-      description: `Mensagem enviada com sucesso para ${clientData?.name || 'o cliente'}.`,
-    })
+    if (activeTab === 'whatsapp') {
+      const sanitizedPhone = clientData?.phone?.replace(/\D/g, '') || ''
+      if (!sanitizedPhone) {
+        toast({
+          title: 'Erro',
+          description: 'Número de WhatsApp inválido para este cliente.',
+          variant: 'destructive',
+        })
+        return
+      }
+
+      const url = `https://wa.me/${sanitizedPhone}?text=${encodeURIComponent(message)}`
+      window.open(url, '_blank')
+
+      toast({
+        title: 'WhatsApp Aberto',
+        description: `Iniciando conversa com ${clientData?.name || 'o cliente'}.`,
+      })
+    } else {
+      toast({
+        title: 'Mensagem Enviada',
+        description: `E-mail enviado com sucesso para ${clientData?.name || 'o cliente'}.`,
+      })
+    }
+
     setMessage('')
     onOpenChange(false)
   }
@@ -49,7 +71,7 @@ export function CommunicationDrawer({ open, onOpenChange, clientData }: Communic
       <SheetContent className="w-[400px] sm:w-[540px] flex flex-col">
         <SheetHeader className="mb-6">
           <SheetTitle className="text-xl flex items-center gap-2">
-            <MessageCircle className="h-5 w-5 text-brand-orange" />
+            <MessageCircle className="h-5 w-5 text-blue-600" />
             Comunicação
           </SheetTitle>
           <SheetDescription>
@@ -57,7 +79,7 @@ export function CommunicationDrawer({ open, onOpenChange, clientData }: Communic
           </SheetDescription>
         </SheetHeader>
 
-        <Tabs defaultValue="whatsapp" className="flex-1 flex flex-col">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="flex-1 flex flex-col">
           <TabsList className="grid w-full grid-cols-2 mb-4">
             <TabsTrigger value="whatsapp">WhatsApp</TabsTrigger>
             <TabsTrigger value="email">E-mail</TabsTrigger>
@@ -92,7 +114,7 @@ export function CommunicationDrawer({ open, onOpenChange, clientData }: Communic
                     variant="secondary"
                     size="sm"
                     onClick={() =>
-                      setMessage('Olá, seu certificado digital está vencendo. Vamos renovar?')
+                      setMessage('Olá! Seu certificado digital está vencendo. Vamos renovar?')
                     }
                     disabled={!canSendMessage}
                   >
@@ -101,7 +123,11 @@ export function CommunicationDrawer({ open, onOpenChange, clientData }: Communic
                   <Button
                     variant="secondary"
                     size="sm"
-                    onClick={() => setMessage('Aguardamos o envio da documentação para emissão.')}
+                    onClick={() =>
+                      setMessage(
+                        'Olá, aguardamos o envio da documentação pendente para prosseguirmos com a emissão.',
+                      )
+                    }
                     disabled={!canSendMessage}
                   >
                     Doc Pendente
@@ -113,9 +139,9 @@ export function CommunicationDrawer({ open, onOpenChange, clientData }: Communic
             <Button
               onClick={handleSend}
               disabled={!canSendMessage}
-              className="w-full mt-auto bg-green-600 hover:bg-green-700 disabled:opacity-50"
+              className="w-full mt-auto bg-green-600 hover:bg-green-700 text-white disabled:opacity-50"
             >
-              <Send className="mr-2 h-4 w-4" /> Enviar WhatsApp
+              <Send className="mr-2 h-4 w-4" /> Abrir no WhatsApp
             </Button>
           </TabsContent>
 
@@ -137,7 +163,7 @@ export function CommunicationDrawer({ open, onOpenChange, clientData }: Communic
             <Button
               onClick={handleSend}
               disabled={!canSendMessage}
-              className="w-full mt-auto disabled:opacity-50"
+              className="w-full mt-auto bg-blue-600 hover:bg-blue-700 text-white disabled:opacity-50"
             >
               <Mail className="mr-2 h-4 w-4" /> Enviar E-mail
             </Button>

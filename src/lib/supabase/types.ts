@@ -1295,6 +1295,7 @@ export type Database = {
           meta_comissao_minima: number | null
           nome: string
           percentual_comissao_padrao: number | null
+          percentual_imposto: number | null
           role: string | null
           senha: string | null
           status: boolean | null
@@ -1310,6 +1311,7 @@ export type Database = {
           meta_comissao_minima?: number | null
           nome: string
           percentual_comissao_padrao?: number | null
+          percentual_imposto?: number | null
           role?: string | null
           senha?: string | null
           status?: boolean | null
@@ -1325,6 +1327,7 @@ export type Database = {
           meta_comissao_minima?: number | null
           nome?: string
           percentual_comissao_padrao?: number | null
+          percentual_imposto?: number | null
           role?: string | null
           senha?: string | null
           status?: boolean | null
@@ -1829,6 +1832,7 @@ export const Constants = {
 //   status: boolean (nullable, default: true)
 //   created_at: timestamp with time zone (nullable, default: timezone('utc'::text, now()))
 //   updated_at: timestamp with time zone (nullable, default: timezone('utc'::text, now()))
+//   percentual_imposto: numeric (nullable, default: 0)
 
 // --- CONSTRAINTS ---
 // Table: CRM_geral
