@@ -8,6 +8,7 @@ import ProtectedRoute from '@/components/ProtectedRoute'
 import Layout from '@/components/Layout'
 import Index from '@/pages/Index'
 import Login from '@/pages/auth/Login'
+import ClientesPage from '@/pages/ClientesPage'
 
 import PagarReceber from '@/pages/financeiro/PagarReceber'
 import ContasBancarias from '@/pages/financeiro/ContasBancarias'
@@ -34,7 +35,9 @@ const App = () => (
           <Route element={<ProtectedRoute />}>
             <Route element={<Layout />}>
               <Route path="/" element={<Index />} />
+              <Route path="/clientes" element={<ClientesPage />} />
 
+              {/* Keep existing routes to not break previous functionalities */}
               <Route path="/financeiro/pagar-receber" element={<PagarReceber />} />
               <Route path="/financeiro/contas-bancarias" element={<ContasBancarias />} />
 

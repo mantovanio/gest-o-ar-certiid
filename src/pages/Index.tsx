@@ -1,34 +1,15 @@
-import { useEffect, useState } from 'react'
-import {
-  TrendingUp,
-  AlertTriangle,
-  DollarSign,
-  Users,
-  PlusCircle,
-  UserPlus,
-  Activity,
-} from 'lucide-react'
+import { useState } from 'react'
+import { Users, ShoppingCart, DollarSign, MessageSquare } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { getDashboardMetrics } from '@/services/dashboard'
-import { CommunicationDrawer } from '@/components/CommunicationDrawer'
 
 const Index = () => {
-  const [metrics, setMetrics] = useState({
-    totalVendasMensal: 0,
-    certificadosVencer: 0,
-    faturamentoBruto: 0,
-    novosLeads: 0,
+  // Mocked data for the initial dashboard phase as requested
+  const [metrics] = useState({
+    totalClientes: 1250,
+    pedidosPendentes: 45,
+    comissoesPagar: 12450.5,
+    mensagensNaoLidas: 12,
   })
-  const [loading, setLoading] = useState(true)
-  const [drawerOpen, setDrawerOpen] = useState(false)
-
-  useEffect(() => {
-    getDashboardMetrics().then((data) => {
-      setMetrics(data)
-      setLoading(false)
-    })
-  }, [])
 
   const formatBRL = (value: number) =>
     new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value)
@@ -37,103 +18,68 @@ const Index = () => {
     <div className="space-y-6 animate-fade-in">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h2 className="text-2xl font-bold tracking-tight text-slate-800">Dashboard</h2>
-          <p className="text-muted-foreground text-sm">Resumo gerencial das suas operações.</p>
-        </div>
-        <div className="flex gap-2">
-          <Button className="bg-[#f97316] hover:bg-orange-600 text-white">
-            <UserPlus className="mr-2 h-4 w-4" /> Cadastrar Cliente
-          </Button>
-          <Button className="bg-blue-600 hover:bg-blue-700 text-white">
-            <PlusCircle className="mr-2 h-4 w-4" /> Lançar Nova Venda
-          </Button>
+          <h2 className="text-2xl font-bold tracking-tight text-blue-900">Dashboard</h2>
+          <p className="text-muted-foreground text-sm">Visão geral do sistema e indicadores.</p>
         </div>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <Card className="shadow-sm border-slate-200">
+      <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
+        <Card className="shadow-sm border-slate-200 bg-white hover:border-blue-200 transition-colors">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-slate-600">
-              Total de Vendas Mensal
-            </CardTitle>
-            <TrendingUp className="h-4 w-4 text-blue-600" />
+            <CardTitle className="text-sm font-medium text-slate-600">Total de Clientes</CardTitle>
+            <div className="bg-blue-100 p-2 rounded-full">
+              <Users className="h-4 w-4 text-blue-600" />
+            </div>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-slate-800">
-              {loading ? '...' : metrics.totalVendasMensal}
-            </div>
-            <p className="text-xs text-muted-foreground mt-1">+12% em relação ao mês anterior</p>
+            <div className="text-2xl font-bold text-slate-800">{metrics.totalClientes}</div>
+            <p className="text-xs text-muted-foreground mt-1">Clientes registrados</p>
           </CardContent>
         </Card>
-        <Card className="shadow-sm border-slate-200">
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-slate-600">
-              Certificados a Vencer
-            </CardTitle>
-            <AlertTriangle className="h-4 w-4 text-orange-500" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-slate-800">
-              {loading ? '...' : metrics.certificadosVencer}
-            </div>
-            <p className="text-xs text-muted-foreground mt-1">Nos próximos 30 dias</p>
-          </CardContent>
-        </Card>
-        <Card className="shadow-sm border-slate-200">
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-slate-600">Faturamento Bruto</CardTitle>
-            <DollarSign className="h-4 w-4 text-emerald-600" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-slate-800">
-              {loading ? '...' : formatBRL(metrics.faturamentoBruto)}
-            </div>
-            <p className="text-xs text-muted-foreground mt-1">+8% em relação ao mês anterior</p>
-          </CardContent>
-        </Card>
-        <Card
-          className="shadow-sm border-slate-200 cursor-pointer"
-          onClick={() => setDrawerOpen(true)}
-        >
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-slate-600">Novos Leads</CardTitle>
-            <Users className="h-4 w-4 text-purple-600" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-slate-800">
-              {loading ? '...' : metrics.novosLeads}
-            </div>
-            <p className="text-xs text-muted-foreground mt-1">Aguardando contato</p>
-          </CardContent>
-        </Card>
-      </div>
 
-      <div className="grid gap-4 grid-cols-1 lg:grid-cols-7">
-        <Card className="col-span-1 lg:col-span-4 shadow-sm border-slate-200">
-          <CardHeader>
-            <CardTitle className="text-base">Últimas Interações</CardTitle>
+        <Card className="shadow-sm border-slate-200 bg-white hover:border-blue-200 transition-colors">
+          <CardHeader className="flex flex-row items-center justify-between pb-2">
+            <CardTitle className="text-sm font-medium text-slate-600">Pedidos Pendentes</CardTitle>
+            <div className="bg-orange-100 p-2 rounded-full">
+              <ShoppingCart className="h-4 w-4 text-orange-600" />
+            </div>
           </CardHeader>
           <CardContent>
-            <div className="space-y-4">
-              {[1, 2, 3].map((i) => (
-                <div
-                  key={i}
-                  className="flex items-start gap-4 border-b border-slate-100 pb-4 last:border-0 last:pb-0"
-                >
-                  <div className="mt-1 bg-green-100 p-2 rounded-full text-green-600">
-                    <Activity className="h-4 w-4" />
-                  </div>
-                  <div className="flex-1 space-y-1">
-                    <p className="text-sm font-medium">WhatsApp enviado para Cliente {i}</p>
-                    <p className="text-sm text-muted-foreground">Lembrete de renovação enviado.</p>
-                  </div>
-                </div>
-              ))}
+            <div className="text-2xl font-bold text-slate-800">{metrics.pedidosPendentes}</div>
+            <p className="text-xs text-muted-foreground mt-1">Aguardando processamento</p>
+          </CardContent>
+        </Card>
+
+        <Card className="shadow-sm border-slate-200 bg-white hover:border-blue-200 transition-colors">
+          <CardHeader className="flex flex-row items-center justify-between pb-2">
+            <CardTitle className="text-sm font-medium text-slate-600">Comissões a Pagar</CardTitle>
+            <div className="bg-emerald-100 p-2 rounded-full">
+              <DollarSign className="h-4 w-4 text-emerald-600" />
             </div>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-slate-800">
+              {formatBRL(metrics.comissoesPagar)}
+            </div>
+            <p className="text-xs text-muted-foreground mt-1">Acumulado do mês</p>
+          </CardContent>
+        </Card>
+
+        <Card className="shadow-sm border-slate-200 bg-white hover:border-blue-200 transition-colors">
+          <CardHeader className="flex flex-row items-center justify-between pb-2">
+            <CardTitle className="text-sm font-medium text-slate-600">
+              Mensagens Não Lidas
+            </CardTitle>
+            <div className="bg-purple-100 p-2 rounded-full">
+              <MessageSquare className="h-4 w-4 text-purple-600" />
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-slate-800">{metrics.mensagensNaoLidas}</div>
+            <p className="text-xs text-muted-foreground mt-1">Aguardando resposta no chat</p>
           </CardContent>
         </Card>
       </div>
-      <CommunicationDrawer open={drawerOpen} onOpenChange={setDrawerOpen} />
     </div>
   )
 }
