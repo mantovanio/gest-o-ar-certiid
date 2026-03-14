@@ -19,6 +19,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { format, parseISO } from 'date-fns'
+import { usePermissions } from '@/hooks/use-permissions'
 
 interface AgendamentoFormProps {
   open: boolean
@@ -43,6 +44,12 @@ export function AgendamentoForm({
   const [duracao, setDuracao] = useState('')
   const [isSaving, setIsSaving] = useState(false)
   const [isDeleting, setIsDeleting] = useState(false)
+
+  const { hasPermission } = usePermissions()
+  const canEdit = hasPermission('editar_agendamento')
+  const canDelete = hasPermission('deletar_agendamento')
+  const canCreate = hasPermission('criar_agendamento')
+  const canSave = selectedEvent ? canEdit : canCreate
 
   useEffect(() => {
     if (open) {
@@ -76,6 +83,7 @@ export function AgendamentoForm({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    if (!canSave) return
     setIsSaving(true)
     try {
       const finalObs = duracao
@@ -95,6 +103,7 @@ export function AgendamentoForm({
   }
 
   const handleDelete = async () => {
+    if (!canDelete) return
     if (window.confirm('Tem certeza que deseja deletar este agendamento?')) {
       setIsDeleting(true)
       try {
@@ -120,115 +129,124 @@ export function AgendamentoForm({
           <DialogDescription>Preencha os detalhes do agendamento de certificado.</DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4 py-4">
-          <div className="space-y-1">
-            <Label>Cliente</Label>
-            <Select
-              value={formData.cliente_id}
-              onValueChange={(v) => setFormData({ ...formData, cliente_id: v })}
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Selecione o cliente" />
-              </SelectTrigger>
-              <SelectContent>
-                {dropdownData.clientes.map((c) => (
-                  <SelectItem key={c.id} value={c.id}>
-                    {c.nome}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-
-          <div className="grid grid-cols-2 gap-4">
+          <fieldset disabled={!canSave} className="space-y-4">
             <div className="space-y-1">
-              <Label>Produto</Label>
+              <Label>Cliente</Label>
               <Select
-                value={formData.produto_id}
-                onValueChange={(v) => setFormData({ ...formData, produto_id: v })}
+                value={formData.cliente_id}
+                onValueChange={(v) => setFormData({ ...formData, cliente_id: v })}
+                disabled={!canSave}
               >
                 <SelectTrigger>
-                  <SelectValue placeholder="Produto..." />
+                  <SelectValue placeholder="Selecione o cliente" />
                 </SelectTrigger>
                 <SelectContent>
-                  {dropdownData.produtos.map((p) => (
-                    <SelectItem key={p.id} value={p.id}>
-                      {p.nome}
+                  {dropdownData.clientes.map((c) => (
+                    <SelectItem key={c.id} value={c.id}>
+                      {c.nome}
                     </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
             </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-1">
+                <Label>Produto</Label>
+                <Select
+                  value={formData.produto_id}
+                  onValueChange={(v) => setFormData({ ...formData, produto_id: v })}
+                  disabled={!canSave}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Produto..." />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {dropdownData.produtos.map((p) => (
+                      <SelectItem key={p.id} value={p.id}>
+                        {p.nome}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-1">
+                <Label>Agente de Registro</Label>
+                <Select
+                  value={formData.agente_id}
+                  onValueChange={(v) => setFormData({ ...formData, agente_id: v })}
+                  disabled={!canSave}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Selecione o Agente" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {agentes.map((a) => (
+                      <SelectItem key={a.id} value={a.id}>
+                        {a.nome}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-1">
+                <Label>Data/Hora</Label>
+                <Input
+                  type="datetime-local"
+                  value={formData.data_pedido || ''}
+                  onChange={(e) => setFormData({ ...formData, data_pedido: e.target.value })}
+                  required
+                  disabled={!canSave}
+                />
+              </div>
+              <div className="space-y-1">
+                <Label>Duração</Label>
+                <Input
+                  placeholder="Ex: 60 min"
+                  value={duracao}
+                  onChange={(e) => setDuracao(e.target.value)}
+                  disabled={!canSave}
+                />
+              </div>
+            </div>
+
             <div className="space-y-1">
-              <Label>Agente de Registro</Label>
+              <Label>Status</Label>
               <Select
-                value={formData.agente_id}
-                onValueChange={(v) => setFormData({ ...formData, agente_id: v })}
+                value={formData.status_pedido}
+                onValueChange={(v) => setFormData({ ...formData, status_pedido: v })}
+                disabled={!canSave}
               >
                 <SelectTrigger>
-                  <SelectValue placeholder="Selecione o Agente" />
+                  <SelectValue placeholder="Selecione o status" />
                 </SelectTrigger>
                 <SelectContent>
-                  {agentes.map((a) => (
-                    <SelectItem key={a.id} value={a.id}>
-                      {a.nome}
-                    </SelectItem>
-                  ))}
+                  <SelectItem value="pendente">Pendente</SelectItem>
+                  <SelectItem value="aguardando pagamento">Aguardando Pagamento</SelectItem>
+                  <SelectItem value="confirmado">Confirmado</SelectItem>
+                  <SelectItem value="reagendado">Reagendado</SelectItem>
+                  <SelectItem value="atendido">Atendido</SelectItem>
+                  <SelectItem value="cancelado">Cancelado</SelectItem>
                 </SelectContent>
               </Select>
             </div>
-          </div>
 
-          <div className="grid grid-cols-2 gap-4">
             <div className="space-y-1">
-              <Label>Data/Hora</Label>
-              <Input
-                type="datetime-local"
-                value={formData.data_pedido || ''}
-                onChange={(e) => setFormData({ ...formData, data_pedido: e.target.value })}
-                required
+              <Label>Observações</Label>
+              <Textarea
+                rows={3}
+                value={formData.observacoes?.replace(/Duração: .*\n\n/, '') || ''}
+                onChange={(e) => setFormData({ ...formData, observacoes: e.target.value })}
+                disabled={!canSave}
               />
             </div>
-            <div className="space-y-1">
-              <Label>Duração</Label>
-              <Input
-                placeholder="Ex: 60 min"
-                value={duracao}
-                onChange={(e) => setDuracao(e.target.value)}
-              />
-            </div>
-          </div>
-
-          <div className="space-y-1">
-            <Label>Status</Label>
-            <Select
-              value={formData.status_pedido}
-              onValueChange={(v) => setFormData({ ...formData, status_pedido: v })}
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Selecione o status" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="pendente">Pendente</SelectItem>
-                <SelectItem value="aguardando pagamento">Aguardando Pagamento</SelectItem>
-                <SelectItem value="confirmado">Confirmado</SelectItem>
-                <SelectItem value="reagendado">Reagendado</SelectItem>
-                <SelectItem value="atendido">Atendido</SelectItem>
-                <SelectItem value="cancelado">Cancelado</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-
-          <div className="space-y-1">
-            <Label>Observações</Label>
-            <Textarea
-              rows={3}
-              value={formData.observacoes?.replace(/Duração: .*\n\n/, '') || ''}
-              onChange={(e) => setFormData({ ...formData, observacoes: e.target.value })}
-            />
-          </div>
+          </fieldset>
 
           <DialogFooter className="flex justify-between items-center sm:justify-between w-full pt-4">
-            {selectedEvent ? (
+            {selectedEvent && canDelete ? (
               <Button
                 type="button"
                 variant="destructive"
@@ -249,13 +267,15 @@ export function AgendamentoForm({
               >
                 Cancelar
               </Button>
-              <Button
-                type="submit"
-                className="bg-blue-600 hover:bg-blue-700"
-                disabled={isSaving || isDeleting}
-              >
-                {isSaving ? 'Salvando...' : 'Salvar'}
-              </Button>
+              {canSave && (
+                <Button
+                  type="submit"
+                  className="bg-blue-600 hover:bg-blue-700"
+                  disabled={isSaving || isDeleting}
+                >
+                  {isSaving ? 'Salvando...' : 'Salvar'}
+                </Button>
+              )}
             </div>
           </DialogFooter>
         </form>

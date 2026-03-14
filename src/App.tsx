@@ -3,6 +3,8 @@ import { Toaster } from '@/components/ui/toaster'
 import { Toaster as Sonner } from '@/components/ui/sonner'
 import { TooltipProvider } from '@/components/ui/tooltip'
 import { AuthProvider } from '@/hooks/use-auth'
+import { PermissionsProvider } from '@/hooks/use-permissions'
+import { RequirePermission } from '@/components/RequirePermission'
 import ProtectedRoute from '@/components/ProtectedRoute'
 
 import Layout from '@/components/Layout'
@@ -13,6 +15,8 @@ import PedidosPage from '@/pages/PedidosPage'
 import AgendamentosPage from '@/pages/AgendamentosPage'
 import ComissoesPage from '@/pages/ComissoesPage'
 import ConfiguracaoComissoesPage from '@/pages/ConfiguracaoComissoesPage'
+import UsuariosPage from '@/pages/usuarios/UsuariosPage'
+import PermissoesPage from '@/pages/configuracoes/PermissoesPage'
 
 import PagarReceber from '@/pages/financeiro/PagarReceber'
 import ContasBancarias from '@/pages/financeiro/ContasBancarias'
@@ -30,42 +34,98 @@ import NotFound from '@/pages/NotFound'
 const App = () => (
   <BrowserRouter future={{ v7_startTransition: false, v7_relativeSplatPath: false }}>
     <AuthProvider>
-      <TooltipProvider>
-        <Toaster />
-        <Sonner />
-        <Routes>
-          <Route path="/login" element={<Login />} />
+      <PermissionsProvider>
+        <TooltipProvider>
+          <Toaster />
+          <Sonner />
+          <Routes>
+            <Route path="/login" element={<Login />} />
 
-          <Route element={<ProtectedRoute />}>
-            <Route element={<Layout />}>
-              <Route path="/" element={<Index />} />
-              <Route path="/dashboard" element={<Index />} />
-              <Route path="/clientes" element={<ClientesPage />} />
-              <Route path="/pedidos" element={<PedidosPage />} />
-              <Route path="/agendamentos" element={<AgendamentosPage />} />
+            <Route element={<ProtectedRoute />}>
+              <Route element={<Layout />}>
+                <Route path="/" element={<Index />} />
+                <Route path="/dashboard" element={<Index />} />
 
-              {/* Modulo Comissoes */}
-              <Route path="/comissoes" element={<ComissoesPage />} />
-              <Route path="/configuracao-comissoes" element={<ConfiguracaoComissoesPage />} />
+                <Route
+                  path="/clientes"
+                  element={
+                    <RequirePermission permissions={['ver_clientes']}>
+                      <ClientesPage />
+                    </RequirePermission>
+                  }
+                />
+                <Route
+                  path="/pedidos"
+                  element={
+                    <RequirePermission permissions={['ver_pedidos']}>
+                      <PedidosPage />
+                    </RequirePermission>
+                  }
+                />
+                <Route
+                  path="/agendamentos"
+                  element={
+                    <RequirePermission permissions={['ver_agendamentos']}>
+                      <AgendamentosPage />
+                    </RequirePermission>
+                  }
+                />
 
-              {/* Keep existing routes to not break previous functionalities */}
-              <Route path="/financeiro/pagar-receber" element={<PagarReceber />} />
-              <Route path="/financeiro/contas-bancarias" element={<ContasBancarias />} />
+                <Route
+                  path="/comissoes"
+                  element={
+                    <RequirePermission
+                      permissions={['ver_comissoes_proprias', 'ver_comissoes_todas']}
+                    >
+                      <ComissoesPage />
+                    </RequirePermission>
+                  }
+                />
+                <Route
+                  path="/configuracao-comissoes"
+                  element={
+                    <RequirePermission permissions={['metas_comissao']}>
+                      <ConfiguracaoComissoesPage />
+                    </RequirePermission>
+                  }
+                />
 
-              <Route path="/vendas/clientes" element={<Clientes />} />
-              <Route path="/vendas/renovacoes" element={<Renovacoes />} />
-              <Route path="/vendas/certificados" element={<CertificadosEmitidos />} />
+                <Route
+                  path="/usuarios"
+                  element={
+                    <RequirePermission permissions={['ver_usuarios']}>
+                      <UsuariosPage />
+                    </RequirePermission>
+                  }
+                />
+                <Route
+                  path="/permissoes"
+                  element={
+                    <RequirePermission permissions={['gerenciar_permissoes']}>
+                      <PermissoesPage />
+                    </RequirePermission>
+                  }
+                />
 
-              <Route path="/graficos/vendas" element={<VendasGraficos />} />
-              <Route path="/graficos/financeiro" element={<FinanceiroGraficos />} />
+                {/* Keep existing routes to not break previous functionalities */}
+                <Route path="/financeiro/pagar-receber" element={<PagarReceber />} />
+                <Route path="/financeiro/contas-bancarias" element={<ContasBancarias />} />
 
-              <Route path="/configuracoes/entrada-midias" element={<EntradaMidias />} />
+                <Route path="/vendas/clientes" element={<Clientes />} />
+                <Route path="/vendas/renovacoes" element={<Renovacoes />} />
+                <Route path="/vendas/certificados" element={<CertificadosEmitidos />} />
+
+                <Route path="/graficos/vendas" element={<VendasGraficos />} />
+                <Route path="/graficos/financeiro" element={<FinanceiroGraficos />} />
+
+                <Route path="/configuracoes/entrada-midias" element={<EntradaMidias />} />
+              </Route>
             </Route>
-          </Route>
 
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </TooltipProvider>
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </TooltipProvider>
+      </PermissionsProvider>
     </AuthProvider>
   </BrowserRouter>
 )

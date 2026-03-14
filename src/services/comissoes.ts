@@ -19,19 +19,41 @@ export interface ComissaoData {
   pedido?: { numero_pedido: string; protocolo_certificadora: string }
 }
 
-export const getComissoes = async (): Promise<ComissaoData[]> => {
+export const getComissoes = async (
+  userEmail?: string,
+  canSeeAll: boolean = true,
+): Promise<ComissaoData[]> => {
   const { data, error } = await supabase
     .from('comissoes')
-    .select(`
+    .select(
+      `
       *,
       vendedor:usuarios!comissoes_vendedor_id_fkey(nome),
       agente:usuarios!comissoes_agente_id_fkey(nome),
       pedido:pedidos!comissoes_pedido_id_fkey(numero_pedido, protocolo_certificadora)
-    `)
+    `,
+    )
     .order('data_calculo', { ascending: false })
 
   if (error) throw error
-  return data as any[]
+
+  let result = data as any[]
+
+  if (!canSeeAll && userEmail) {
+    const { data: userData, error: userError } = await supabase
+      .from('usuarios')
+      .select('id')
+      .eq('email', userEmail)
+      .single()
+
+    if (!userError && userData) {
+      result = result.filter((c) => c.vendedor_id === userData.id || c.agente_id === userData.id)
+    } else {
+      result = []
+    }
+  }
+
+  return result
 }
 
 export const markComissaoAsPaid = async (id: string): Promise<void> => {

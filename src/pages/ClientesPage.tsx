@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import { PageHeader } from '@/components/PageHeader'
 import { toast } from '@/hooks/use-toast'
+import { usePermissions } from '@/hooks/use-permissions'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -37,6 +38,9 @@ const initialFormState: ClienteFormData = {
 }
 
 export default function ClientesPage() {
+  const { hasPermission } = usePermissions()
+  const canCreate = hasPermission('criar_cliente')
+
   const [clientes, setClientes] = useState<ClienteData[]>([])
   const [formData, setFormData] = useState<ClienteFormData>(initialFormState)
   const [isLoading, setIsLoading] = useState(true)
@@ -174,13 +178,15 @@ export default function ClientesPage() {
     <div className="space-y-6 animate-fade-in">
       <PageHeader title="Gestão de Clientes" module="Cadastros" page="Clientes" />
 
-      <ClienteForm
-        formData={formData}
-        onChange={handleFieldChange}
-        onSave={handleSave}
-        onClear={handleClear}
-        isSaving={isSaving}
-      />
+      {(canCreate || formData.id) && (
+        <ClienteForm
+          formData={formData}
+          onChange={handleFieldChange}
+          onSave={handleSave}
+          onClear={handleClear}
+          isSaving={isSaving}
+        />
+      )}
 
       <ClienteList
         clientes={clientes}

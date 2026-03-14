@@ -24,6 +24,7 @@ import {
   deletePedido,
 } from '@/services/pedidos'
 import { toast } from '@/hooks/use-toast'
+import { usePermissions } from '@/hooks/use-permissions'
 import { cn } from '@/lib/utils'
 
 export default function AgendamentosPage() {
@@ -41,6 +42,9 @@ export default function AgendamentosPage() {
   const [formOpen, setFormOpen] = useState(false)
   const [selectedEvent, setSelectedEvent] = useState<any | null>(null)
   const [initialDate, setInitialDate] = useState<Date | null>(null)
+
+  const { hasPermission } = usePermissions()
+  const canCreate = hasPermission('criar_agendamento')
 
   const loadData = useCallback(async () => {
     setIsLoading(true)
@@ -170,16 +174,18 @@ export default function AgendamentosPage() {
                 </SelectContent>
               </Select>
 
-              <Button
-                onClick={() => {
-                  setInitialDate(new Date())
-                  setSelectedEvent(null)
-                  setFormOpen(true)
-                }}
-                className="bg-blue-600 hover:bg-blue-700"
-              >
-                <Plus className="mr-2 h-4 w-4" /> Novo
-              </Button>
+              {canCreate && (
+                <Button
+                  onClick={() => {
+                    setInitialDate(new Date())
+                    setSelectedEvent(null)
+                    setFormOpen(true)
+                  }}
+                  className="bg-blue-600 hover:bg-blue-700"
+                >
+                  <Plus className="mr-2 h-4 w-4" /> Novo
+                </Button>
+              )}
             </div>
           </div>
 

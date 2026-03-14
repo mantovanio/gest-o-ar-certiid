@@ -19,6 +19,7 @@ import {
 } from '@/components/ui/dialog'
 import { Edit, Trash2, Eye, Search, Plus } from 'lucide-react'
 import { PedidoData } from '@/services/pedidos'
+import { usePermissions } from '@/hooks/use-permissions'
 
 interface PedidoListProps {
   pedidos: PedidoData[]
@@ -31,6 +32,10 @@ interface PedidoListProps {
 export function PedidoList({ pedidos, onEdit, onDeleteClick, onNew, isLoading }: PedidoListProps) {
   const [searchTerm, setSearchTerm] = useState('')
   const [viewData, setViewData] = useState<PedidoData | null>(null)
+  const { hasPermission } = usePermissions()
+  const canCreate = hasPermission('criar_pedido')
+  const canEdit = hasPermission('editar_pedido')
+  const canDelete = hasPermission('deletar_pedido')
 
   const filtered = pedidos.filter(
     (p) =>
@@ -55,12 +60,14 @@ export function PedidoList({ pedidos, onEdit, onDeleteClick, onNew, isLoading }:
               onChange={(e) => setSearchTerm(e.target.value)}
             />
           </div>
-          <Button
-            onClick={onNew}
-            className="bg-emerald-600 hover:bg-emerald-700 text-white w-full sm:w-auto"
-          >
-            <Plus className="mr-2 h-4 w-4" /> Novo Pedido
-          </Button>
+          {canCreate && (
+            <Button
+              onClick={onNew}
+              className="bg-emerald-600 hover:bg-emerald-700 text-white w-full sm:w-auto"
+            >
+              <Plus className="mr-2 h-4 w-4" /> Novo Pedido
+            </Button>
+          )}
         </div>
 
         <div className="rounded-md border border-slate-200 mt-4 overflow-hidden">
@@ -101,22 +108,26 @@ export function PedidoList({ pedidos, onEdit, onDeleteClick, onNew, isLoading }:
                       >
                         <Eye className="h-4 w-4 text-slate-600" />
                       </Button>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="h-8 w-8"
-                        onClick={() => onEdit(row)}
-                      >
-                        <Edit className="h-4 w-4 text-blue-600" />
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="h-8 w-8"
-                        onClick={() => onDeleteClick(row)}
-                      >
-                        <Trash2 className="h-4 w-4 text-red-500" />
-                      </Button>
+                      {canEdit && (
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-8 w-8"
+                          onClick={() => onEdit(row)}
+                        >
+                          <Edit className="h-4 w-4 text-blue-600" />
+                        </Button>
+                      )}
+                      {canDelete && (
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-8 w-8"
+                          onClick={() => onDeleteClick(row)}
+                        >
+                          <Trash2 className="h-4 w-4 text-red-500" />
+                        </Button>
+                      )}
                     </TableCell>
                     <TableCell className="font-medium">
                       {row.protocolo_certificadora || row.numero_pedido || '-'}

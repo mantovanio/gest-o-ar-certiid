@@ -3,6 +3,7 @@ import { PageHeader } from '@/components/PageHeader'
 import { toast } from '@/hooks/use-toast'
 import { PedidoForm } from '@/components/pedidos/PedidoForm'
 import { PedidoList } from '@/components/pedidos/PedidoList'
+import { usePermissions } from '@/hooks/use-permissions'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -41,6 +42,9 @@ const initialFormState: PedidoFormData = {
 }
 
 export default function PedidosPage() {
+  const { hasPermission } = usePermissions()
+  const canCreate = hasPermission('criar_pedido')
+
   const [pedidos, setPedidos] = useState<PedidoData[]>([])
   const [dropdownData, setDropdownData] = useState<{
     clientes: any[]
@@ -177,7 +181,7 @@ export default function PedidosPage() {
     <div className="space-y-6 animate-fade-in">
       <PageHeader title="Gestão de Pedidos" module="Vendas" page="Pedidos" />
 
-      {showForm ? (
+      {showForm && (canCreate || formData.id) ? (
         <PedidoForm
           formData={formData}
           onChange={handleFieldChange}

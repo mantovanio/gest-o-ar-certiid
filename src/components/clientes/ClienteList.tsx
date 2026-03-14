@@ -10,6 +10,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Edit, Trash2, Loader2 } from 'lucide-react'
 import { ClienteData } from '@/services/clientes'
+import { usePermissions } from '@/hooks/use-permissions'
 
 interface ClienteListProps {
   clientes: ClienteData[]
@@ -26,6 +27,10 @@ export function ClienteList({
   actionLoadingId,
   isLoading,
 }: ClienteListProps) {
+  const { hasPermission } = usePermissions()
+  const canEdit = hasPermission('editar_cliente')
+  const canDelete = hasPermission('deletar_cliente')
+
   return (
     <Card className="bg-white border-slate-200 shadow-sm">
       <CardHeader className="border-b border-slate-100 bg-slate-50/50 pb-4">
@@ -77,29 +82,33 @@ export function ClienteList({
                     </span>
                   </TableCell>
                   <TableCell className="text-right space-x-2 whitespace-nowrap">
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => onEdit(cliente)}
-                      className="text-blue-600 hover:text-blue-800 hover:bg-blue-100"
-                      title="Editar"
-                    >
-                      <Edit className="h-4 w-4" />
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => onDeleteClick(cliente)}
-                      disabled={actionLoadingId === cliente.id}
-                      className="text-red-500 hover:text-red-700 hover:bg-red-50"
-                      title="Deletar"
-                    >
-                      {actionLoadingId === cliente.id ? (
-                        <Loader2 className="h-4 w-4 animate-spin" />
-                      ) : (
-                        <Trash2 className="h-4 w-4" />
-                      )}
-                    </Button>
+                    {canEdit && (
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => onEdit(cliente)}
+                        className="text-blue-600 hover:text-blue-800 hover:bg-blue-100"
+                        title="Editar"
+                      >
+                        <Edit className="h-4 w-4" />
+                      </Button>
+                    )}
+                    {canDelete && (
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => onDeleteClick(cliente)}
+                        disabled={actionLoadingId === cliente.id}
+                        className="text-red-500 hover:text-red-700 hover:bg-red-50"
+                        title="Deletar"
+                      >
+                        {actionLoadingId === cliente.id ? (
+                          <Loader2 className="h-4 w-4 animate-spin" />
+                        ) : (
+                          <Trash2 className="h-4 w-4" />
+                        )}
+                      </Button>
+                    )}
                   </TableCell>
                 </TableRow>
               ))

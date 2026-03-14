@@ -9,6 +9,7 @@ import {
   UserPlus,
   Settings,
   Home,
+  ShieldCheck,
 } from 'lucide-react'
 import {
   Sidebar,
@@ -21,26 +22,65 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from '@/components/ui/sidebar'
+import { usePermissions } from '@/hooks/use-permissions'
 import { cn } from '@/lib/utils'
-
-const navigation = [
-  { name: 'Dashboard', href: '/', icon: Home },
-  { name: 'Clientes', href: '/clientes', icon: Users },
-  { name: 'Pedidos', href: '/pedidos', icon: ShoppingCart },
-  { name: 'Agendamentos', href: '/agendamentos', icon: Calendar },
-  { name: 'Comissões', href: '/comissoes', icon: DollarSign },
-  { name: 'Chat WhatsApp', href: '#chat', icon: MessageSquare },
-  { name: 'Relatórios', href: '#relatorios', icon: FileText },
-  { name: 'Usuários', href: '#usuarios', icon: UserPlus },
-  { name: 'Configurações', href: '#config', icon: Settings },
-  { name: 'Config. Comissões', href: '/configuracao-comissoes', icon: Settings },
-]
 
 export function AppSidebar() {
   const location = useLocation()
   const { state } = useSidebar()
+  const { hasPermission } = usePermissions()
 
   const isActive = (path: string) => location.pathname === path && path !== '#'
+
+  const navigation = [
+    { name: 'Dashboard', href: '/', icon: Home, show: true },
+    { name: 'Clientes', href: '/clientes', icon: Users, show: hasPermission('ver_clientes') },
+    { name: 'Pedidos', href: '/pedidos', icon: ShoppingCart, show: hasPermission('ver_pedidos') },
+    {
+      name: 'Agendamentos',
+      href: '/agendamentos',
+      icon: Calendar,
+      show: hasPermission('ver_agendamentos'),
+    },
+    {
+      name: 'Comissões',
+      href: '/comissoes',
+      icon: DollarSign,
+      show: hasPermission('ver_comissoes_proprias') || hasPermission('ver_comissoes_todas'),
+    },
+    {
+      name: 'Chat WhatsApp',
+      href: '#chat',
+      icon: MessageSquare,
+      show: hasPermission('ver_conversas'),
+    },
+    {
+      name: 'Relatórios',
+      href: '#relatorios',
+      icon: FileText,
+      show: hasPermission('ver_relatorios'),
+    },
+    { name: 'Usuários', href: '/usuarios', icon: UserPlus, show: hasPermission('ver_usuarios') },
+    {
+      name: 'Configurações',
+      href: '#config',
+      icon: Settings,
+      show:
+        hasPermission('tabelas_preco') || hasPermission('integracoes') || hasPermission('backup'),
+    },
+    {
+      name: 'Config. Comissões',
+      href: '/configuracao-comissoes',
+      icon: Settings,
+      show: hasPermission('metas_comissao'),
+    },
+    {
+      name: 'Permissões',
+      href: '/permissoes',
+      icon: ShieldCheck,
+      show: hasPermission('gerenciar_permissoes'),
+    },
+  ].filter((item) => item.show)
 
   return (
     <Sidebar className="border-r border-slate-200 bg-white shadow-sm">

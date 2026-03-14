@@ -25,24 +25,34 @@ import {
   calculateComissoes,
   ComissaoData,
 } from '@/services/comissoes'
+import { usePermissions } from '@/hooks/use-permissions'
+import { useAuth } from '@/hooks/use-auth'
 
 export default function ComissoesPage() {
+  const { hasPermission } = usePermissions()
+  const { user } = useAuth()
+
+  const canSeeAll = hasPermission('ver_comissoes_todas')
+  const canCalculate = hasPermission('calcular_comissoes')
+  const canPay = hasPermission('pagar_comissoes')
+
   const [data, setData] = useState<ComissaoData[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [isCalculating, setIsCalculating] = useState(false)
   const [statusFilter, setStatusFilter] = useState('todos')
 
   const loadData = useCallback(async () => {
+    if (!user?.email) return
     setIsLoading(true)
     try {
-      const result = await getComissoes()
+      const result = await getComissoes(user.email, canSeeAll)
       setData(result)
     } catch (error: any) {
       toast({ title: 'Erro', description: 'Falha ao carregar comissões.', variant: 'destructive' })
     } finally {
       setIsLoading(false)
     }
-  }, [])
+  }, [user?.email, canSeeAll])
 
   useEffect(() => {
     loadData()
@@ -68,6 +78,7 @@ export default function ComissoesPage() {
   }
 
   const handleMarkAsPaid = async (id: string) => {
+    if (!canPay) return
     try {
       await markComissaoAsPaid(id)
       toast({ title: 'Sucesso', description: 'Comissão marcada como paga.' })
@@ -113,14 +124,16 @@ export default function ComissoesPage() {
                 />
               </Button>
             </div>
-            <Button
-              onClick={handleCalculate}
-              disabled={isCalculating}
-              className="bg-blue-600 hover:bg-blue-700 w-full sm:w-auto"
-            >
-              <Calculator className="mr-2 h-4 w-4" />
-              {isCalculating ? 'Calculando...' : 'Calcular Comissões'}
-            </Button>
+            {canCalculate && (
+              <Button
+                onClick={handleCalculate}
+                disabled={isCalculating}
+                className="bg-blue-600 hover:bg-blue-700 w-full sm:w-auto"
+              >
+                <Calculator className="mr-2 h-4 w-4" />
+                {isCalculating ? 'Calculando...' : 'Calcular Comissões'}
+              </Button>
+            )}
           </div>
 
           <div className="rounded-md border border-slate-200 overflow-hidden">
@@ -136,19 +149,22 @@ export default function ComissoesPage() {
                   <TableHead>Líquido</TableHead>
                   <TableHead>Status</TableHead>
                   <TableHead>Pagamento</TableHead>
-                  <TableHead className="text-right">Ação</TableHead>
+                  {canPay && <TableHead className="text-right">Ação</TableHead>}
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {isLoading ? (
                   <TableRow>
-                    <TableCell colSpan={10} className="text-center py-8">
+                    <TableCell colSpan={canPay ? 10 : 9} className="text-center py-8">
                       Carregando...
                     </TableCell>
                   </TableRow>
                 ) : filteredData.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={10} className="text-center py-8 text-slate-500">
+                    <TableCell
+                      colSpan={canPay ? 10 : 9}
+                      className="text-center py-8 text-slate-500"
+                    >
                       Nenhuma comissão encontrada.
                     </TableCell>
                   </TableRow>
@@ -180,18 +196,20 @@ export default function ComissoesPage() {
                       <TableCell className="text-xs text-slate-500">
                         {formatDate(row.data_pagamento)}
                       </TableCell>
-                      <TableCell className="text-right">
-                        {row.status !== 'Pago' && (
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => handleMarkAsPaid(row.id)}
-                            className="text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50"
-                          >
-                            <CheckCircle2 className="mr-1 h-4 w-4" /> Pagar
-                          </Button>
-                        )}
-                      </TableCell>
+                      {canPay && (
+                        <TableCell className="text-right">
+                          {row.status !== 'Pago' && (
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => handleMarkAsPaid(row.id)}
+                              className="text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50"
+                            >
+                              <CheckCircle2 className="mr-1 h-4 w-4" /> Pagar
+                            </Button>
+                          )}
+                        </TableCell>
+                      )}
                     </TableRow>
                   ))
                 )}
