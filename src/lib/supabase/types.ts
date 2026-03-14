@@ -1,11 +1,17 @@
 // AVOID UPDATING THIS FILE DIRECTLY. It is automatically generated.
-export type Json = string | number | boolean | null | { [key: string]: Json | undefined } | Json[]
+export type Json =
+  | string
+  | number
+  | boolean
+  | null
+  | { [key: string]: Json | undefined }
+  | Json[]
 
 export type Database = {
   // Allows to automatically instantiate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
-    PostgrestVersion: '14.1'
+    PostgrestVersion: "14.1"
   }
   public: {
     Tables: {
@@ -254,59 +260,59 @@ export type Database = {
       }
       CRM_geral: {
         Row: {
-          'Data da consulta': string | null
-          'Follow UP 1': string | null
-          'Follow UP 2': string | null
-          'Follow UP 3': string | null
-          'IDConta ChatWoot': string | null
-          'IDConversa ChatWoot': string | null
-          'Identificador do usuario': string
-          'IDLead ChatWoot': string | null
-          'InboxID ChatWoot': string | null
-          'Inicio do atendimento': string | null
-          'Marcou no Grupo': string | null
+          "Data da consulta": string | null
+          "Follow UP 1": string | null
+          "Follow UP 2": string | null
+          "Follow UP 3": string | null
+          "IDConta ChatWoot": string | null
+          "IDConversa ChatWoot": string | null
+          "Identificador do usuario": string
+          "IDLead ChatWoot": string | null
+          "InboxID ChatWoot": string | null
+          "Inicio do atendimento": string | null
+          "Marcou no Grupo": string | null
           nomeLead: string | null
           Produto: string | null
-          'Resumo da conversa': string | null
-          'Timestamp ultima msg': string | null
+          "Resumo da conversa": string | null
+          "Timestamp ultima msg": string | null
           Unidade: string | null
           Whatsapp: string | null
         }
         Insert: {
-          'Data da consulta'?: string | null
-          'Follow UP 1'?: string | null
-          'Follow UP 2'?: string | null
-          'Follow UP 3'?: string | null
-          'IDConta ChatWoot'?: string | null
-          'IDConversa ChatWoot'?: string | null
-          'Identificador do usuario': string
-          'IDLead ChatWoot'?: string | null
-          'InboxID ChatWoot'?: string | null
-          'Inicio do atendimento'?: string | null
-          'Marcou no Grupo'?: string | null
+          "Data da consulta"?: string | null
+          "Follow UP 1"?: string | null
+          "Follow UP 2"?: string | null
+          "Follow UP 3"?: string | null
+          "IDConta ChatWoot"?: string | null
+          "IDConversa ChatWoot"?: string | null
+          "Identificador do usuario": string
+          "IDLead ChatWoot"?: string | null
+          "InboxID ChatWoot"?: string | null
+          "Inicio do atendimento"?: string | null
+          "Marcou no Grupo"?: string | null
           nomeLead?: string | null
           Produto?: string | null
-          'Resumo da conversa'?: string | null
-          'Timestamp ultima msg'?: string | null
+          "Resumo da conversa"?: string | null
+          "Timestamp ultima msg"?: string | null
           Unidade?: string | null
           Whatsapp?: string | null
         }
         Update: {
-          'Data da consulta'?: string | null
-          'Follow UP 1'?: string | null
-          'Follow UP 2'?: string | null
-          'Follow UP 3'?: string | null
-          'IDConta ChatWoot'?: string | null
-          'IDConversa ChatWoot'?: string | null
-          'Identificador do usuario'?: string
-          'IDLead ChatWoot'?: string | null
-          'InboxID ChatWoot'?: string | null
-          'Inicio do atendimento'?: string | null
-          'Marcou no Grupo'?: string | null
+          "Data da consulta"?: string | null
+          "Follow UP 1"?: string | null
+          "Follow UP 2"?: string | null
+          "Follow UP 3"?: string | null
+          "IDConta ChatWoot"?: string | null
+          "IDConversa ChatWoot"?: string | null
+          "Identificador do usuario"?: string
+          "IDLead ChatWoot"?: string | null
+          "InboxID ChatWoot"?: string | null
+          "Inicio do atendimento"?: string | null
+          "Marcou no Grupo"?: string | null
           nomeLead?: string | null
           Produto?: string | null
-          'Resumo da conversa'?: string | null
-          'Timestamp ultima msg'?: string | null
+          "Resumo da conversa"?: string | null
+          "Timestamp ultima msg"?: string | null
           Unidade?: string | null
           Whatsapp?: string | null
         }
@@ -441,11 +447,11 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: 'Itens_Produto_Pedido_ID_fkey'
-            columns: ['Pedido_ID']
+            foreignKeyName: "Itens_Produto_Pedido_ID_fkey"
+            columns: ["Pedido_ID"]
             isOneToOne: false
-            referencedRelation: 'Pedidos'
-            referencedColumns: ['Pedido_ID']
+            referencedRelation: "Pedidos"
+            referencedColumns: ["Pedido_ID"]
           },
         ]
       }
@@ -638,11 +644,11 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: 'Pedidos_ID_Pessoa_fkey'
-            columns: ['ID_Pessoa']
+            foreignKeyName: "Pedidos_ID_Pessoa_fkey"
+            columns: ["ID_Pessoa"]
             isOneToOne: false
-            referencedRelation: 'Pessoas'
-            referencedColumns: ['ID_Pessoa']
+            referencedRelation: "Pessoas"
+            referencedColumns: ["ID_Pessoa"]
           },
         ]
       }
@@ -737,31 +743,33 @@ export type Database = {
   }
 }
 
-type DatabaseWithoutInternals = Omit<Database, '__InternalSupabase'>
+type DatabaseWithoutInternals = Omit<Database, "__InternalSupabase">
 
-type DefaultSchema = DatabaseWithoutInternals[Extract<keyof Database, 'public'>]
+type DefaultSchema = DatabaseWithoutInternals[Extract<keyof Database, "public">]
 
 export type Tables<
   DefaultSchemaTableNameOrOptions extends
-    | keyof (DefaultSchema['Tables'] & DefaultSchema['Views'])
+    | keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
     | { schema: keyof DatabaseWithoutInternals },
   TableName extends DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
-    ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Tables'] &
-        DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Views'])
+    ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
+        DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
     : never = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
-  ? (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Tables'] &
-      DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Views'])[TableName] extends {
+  ? (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
+      DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])[TableName] extends {
       Row: infer R
     }
     ? R
     : never
-  : DefaultSchemaTableNameOrOptions extends keyof (DefaultSchema['Tables'] & DefaultSchema['Views'])
-    ? (DefaultSchema['Tables'] & DefaultSchema['Views'])[DefaultSchemaTableNameOrOptions] extends {
+  : DefaultSchemaTableNameOrOptions extends keyof (DefaultSchema["Tables"] &
+        DefaultSchema["Views"])
+    ? (DefaultSchema["Tables"] &
+        DefaultSchema["Views"])[DefaultSchemaTableNameOrOptions] extends {
         Row: infer R
       }
       ? R
@@ -770,23 +778,23 @@ export type Tables<
 
 export type TablesInsert<
   DefaultSchemaTableNameOrOptions extends
-    | keyof DefaultSchema['Tables']
+    | keyof DefaultSchema["Tables"]
     | { schema: keyof DatabaseWithoutInternals },
   TableName extends DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
-    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Tables']
+    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
     : never = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
-  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Tables'][TableName] extends {
+  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
       Insert: infer I
     }
     ? I
     : never
-  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema['Tables']
-    ? DefaultSchema['Tables'][DefaultSchemaTableNameOrOptions] extends {
+  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
+    ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
         Insert: infer I
       }
       ? I
@@ -795,23 +803,23 @@ export type TablesInsert<
 
 export type TablesUpdate<
   DefaultSchemaTableNameOrOptions extends
-    | keyof DefaultSchema['Tables']
+    | keyof DefaultSchema["Tables"]
     | { schema: keyof DatabaseWithoutInternals },
   TableName extends DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
-    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Tables']
+    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
     : never = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
-  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Tables'][TableName] extends {
+  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
       Update: infer U
     }
     ? U
     : never
-  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema['Tables']
-    ? DefaultSchema['Tables'][DefaultSchemaTableNameOrOptions] extends {
+  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
+    ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
         Update: infer U
       }
       ? U
@@ -820,36 +828,36 @@ export type TablesUpdate<
 
 export type Enums<
   DefaultSchemaEnumNameOrOptions extends
-    | keyof DefaultSchema['Enums']
+    | keyof DefaultSchema["Enums"]
     | { schema: keyof DatabaseWithoutInternals },
   EnumName extends DefaultSchemaEnumNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
-    ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions['schema']]['Enums']
+    ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
     : never = never,
 > = DefaultSchemaEnumNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
-  ? DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions['schema']]['Enums'][EnumName]
-  : DefaultSchemaEnumNameOrOptions extends keyof DefaultSchema['Enums']
-    ? DefaultSchema['Enums'][DefaultSchemaEnumNameOrOptions]
+  ? DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"][EnumName]
+  : DefaultSchemaEnumNameOrOptions extends keyof DefaultSchema["Enums"]
+    ? DefaultSchema["Enums"][DefaultSchemaEnumNameOrOptions]
     : never
 
 export type CompositeTypes<
   PublicCompositeTypeNameOrOptions extends
-    | keyof DefaultSchema['CompositeTypes']
+    | keyof DefaultSchema["CompositeTypes"]
     | { schema: keyof DatabaseWithoutInternals },
   CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
-    ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions['schema']]['CompositeTypes']
+    ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
     : never = never,
 > = PublicCompositeTypeNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
-  ? DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions['schema']]['CompositeTypes'][CompositeTypeName]
-  : PublicCompositeTypeNameOrOptions extends keyof DefaultSchema['CompositeTypes']
-    ? DefaultSchema['CompositeTypes'][PublicCompositeTypeNameOrOptions]
+  ? DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
+  : PublicCompositeTypeNameOrOptions extends keyof DefaultSchema["CompositeTypes"]
+    ? DefaultSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
     : never
 
 export const Constants = {
@@ -857,6 +865,7 @@ export const Constants = {
     Enums: {},
   },
 } as const
+
 
 // ====== DATABASE EXTENDED CONTEXT (auto-generated) ======
 // This section contains actual PostgreSQL column types, constraints, RLS policies,
@@ -1192,7 +1201,7 @@ export const Constants = {
 //     END LOOP;
 //   END;
 //   $function$
-//
+//   
 
 // --- INDEXES ---
 // Table: Pessoas
@@ -1204,3 +1213,4 @@ export const Constants = {
 //   CREATE UNIQUE INDEX crm_agente_ia_identificador_usuario_key ON public.crm_agente_ia USING btree (identificador_usuario)
 // Table: partner_leads
 //   CREATE UNIQUE INDEX partner_leads_dedup_key_uidx ON public.partner_leads USING btree (dedup_key)
+
