@@ -31,6 +31,7 @@ import VendasGraficos from '@/pages/graficos/Vendas'
 import FinanceiroGraficos from '@/pages/graficos/Financeiro'
 
 import EntradaMidias from '@/pages/configuracoes/EntradaMidias'
+import NotificacoesLog from '@/pages/configuracoes/NotificacoesLog'
 import NotFound from '@/pages/NotFound'
 
 const App = () => (
@@ -125,7 +126,6 @@ const App = () => (
                   }
                 />
 
-                {/* Keep existing routes to not break previous functionalities */}
                 <Route path="/financeiro/pagar-receber" element={<PagarReceber />} />
                 <Route path="/financeiro/contas-bancarias" element={<ContasBancarias />} />
 
@@ -137,6 +137,7 @@ const App = () => (
                 <Route path="/graficos/financeiro" element={<FinanceiroGraficos />} />
 
                 <Route path="/configuracoes/entrada-midias" element={<EntradaMidias />} />
+                <Route path="/configuracoes/notificacoes" element={<NotificacoesLog />} />
               </Route>
             </Route>
 
