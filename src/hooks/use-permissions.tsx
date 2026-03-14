@@ -36,18 +36,26 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
     const loadPermissions = async () => {
       setLoading(true)
       try {
-        const { data: userData } = await supabase
+        const { data: userData, error: userError } = await supabase
           .from('usuarios')
           .select('id, role')
           .eq('email', user.email)
-          .single()
+          .maybeSingle()
+
+        if (userError) {
+          console.error('Error fetching user for permissions:', userError)
+        }
 
         if (userData) {
           setIsAdmin(userData.role === 'admin')
-          const { data: perms } = await supabase
+          const { data: perms, error: permsError } = await supabase
             .from('permissoes_usuario')
             .select('funcionalidade, permitido')
             .eq('usuario_id', userData.id)
+
+          if (permsError) {
+            console.error('Error fetching permissions:', permsError)
+          }
 
           if (perms) {
             const permsMap = perms.reduce(
@@ -58,13 +66,19 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
               {} as Record<string, boolean>,
             )
             setPermissions(permsMap)
+          } else {
+            setPermissions({})
           }
         } else {
           // Fallback if the user does not exist in the usuarios table yet
-          setIsAdmin(true)
+          // Restricted "guest" role
+          setIsAdmin(false)
+          setPermissions({})
         }
       } catch (error) {
         console.error('Error loading permissions:', error)
+        setIsAdmin(false)
+        setPermissions({})
       } finally {
         setLoading(false)
       }
