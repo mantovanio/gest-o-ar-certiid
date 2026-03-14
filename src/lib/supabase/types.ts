@@ -734,6 +734,42 @@ export type Database = {
         }
         Relationships: []
       }
+      notification_queue: {
+        Row: {
+          created_at: string | null
+          error_log: string | null
+          id: string
+          message: string
+          notification_type: string | null
+          phone: string
+          processed_at: string | null
+          reference_id: string | null
+          status: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          error_log?: string | null
+          id?: string
+          message: string
+          notification_type?: string | null
+          phone: string
+          processed_at?: string | null
+          reference_id?: string | null
+          status?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          error_log?: string | null
+          id?: string
+          message?: string
+          notification_type?: string | null
+          phone?: string
+          processed_at?: string | null
+          reference_id?: string | null
+          status?: string | null
+        }
+        Relationships: []
+      }
       partner_leads: {
         Row: {
           bairro: string | null
@@ -1690,6 +1726,16 @@ export const Constants = {
 //   id: integer (not null)
 //   session_id: character varying (not null)
 //   message: jsonb (nullable)
+// Table: notification_queue
+//   id: uuid (not null, default: gen_random_uuid())
+//   phone: text (not null)
+//   message: text (not null)
+//   reference_id: uuid (nullable)
+//   notification_type: text (nullable)
+//   status: text (nullable, default: 'pending'::text)
+//   error_log: text (nullable)
+//   created_at: timestamp with time zone (nullable, default: now())
+//   processed_at: timestamp with time zone (nullable)
 // Table: partner_leads
 //   id: uuid (not null, default: gen_random_uuid())
 //   created_at: timestamp with time zone (not null, default: now())
@@ -1887,6 +1933,8 @@ export const Constants = {
 //   PRIMARY KEY media_inventory_pkey: PRIMARY KEY (id)
 // Table: n8n_chat_histories
 //   PRIMARY KEY n8n_chat_histories_pkey: PRIMARY KEY (id)
+// Table: notification_queue
+//   PRIMARY KEY notification_queue_pkey: PRIMARY KEY (id)
 // Table: partner_leads
 //   PRIMARY KEY partner_leads_pkey: PRIMARY KEY (id)
 // Table: partners
@@ -1973,6 +2021,10 @@ export const Constants = {
 // Table: media_inventory
 //   Policy "Allow all access media_inventory" (ALL, PERMISSIVE) roles={public}
 //     USING: true
+// Table: notification_queue
+//   Policy "Allow all access notification_queue" (ALL, PERMISSIVE) roles={authenticated}
+//     USING: true
+//     WITH CHECK: true
 // Table: partner_leads
 //   Policy "politica de privacidade" (ALL, PERMISSIVE) roles={public}
 //     USING: true
@@ -2036,6 +2088,88 @@ export const Constants = {
 //   END;
 //   $function$
 //
+// FUNCTION trg_notify_cert_approval()
+//   CREATE OR REPLACE FUNCTION public.trg_notify_cert_approval()
+//    RETURNS trigger
+//    LANGUAGE plpgsql
+//   AS $function$
+//   DECLARE
+//       v_telefone TEXT;
+//       v_nome TEXT;
+//   BEGIN
+//       IF NEW.status ILIKE '%aprovado%' AND (TG_OP = 'INSERT' OR (TG_OP = 'UPDATE' AND OLD.status IS DISTINCT FROM NEW.status)) THEN
+//           SELECT telefone_cliente, cliente_nome INTO v_telefone, v_nome FROM public.pedidos WHERE id = NEW.pedido_id;
+//           IF v_telefone IS NOT NULL AND v_telefone != '' THEN
+//               INSERT INTO public.notification_queue (phone, message, reference_id, notification_type)
+//               VALUES (
+//                   v_telefone,
+//                   'Olá ' || COALESCE(v_nome, 'Cliente') || ', seu certificado foi aprovado com sucesso!',
+//                   NEW.pedido_id,
+//                   'CERT_APPROVAL'
+//               );
+//           END IF;
+//       END IF;
+//       RETURN NEW;
+//   END;
+//   $function$
+//
+// FUNCTION trg_notify_comissao()
+//   CREATE OR REPLACE FUNCTION public.trg_notify_comissao()
+//    RETURNS trigger
+//    LANGUAGE plpgsql
+//   AS $function$
+//   DECLARE
+//       v_telefone TEXT;
+//       v_nome TEXT;
+//   BEGIN
+//       IF TG_OP = 'INSERT' OR (TG_OP = 'UPDATE' AND OLD.status IS DISTINCT FROM NEW.status) THEN
+//           SELECT a.telefone, u.nome INTO v_telefone, v_nome
+//           FROM public.usuarios u
+//           LEFT JOIN public.agents a ON a.email = u.email
+//           WHERE u.id = COALESCE(NEW.vendedor_id, NEW.agente_id)
+//           LIMIT 1;
+//
+//           IF v_telefone IS NOT NULL AND v_telefone != '' THEN
+//               INSERT INTO public.notification_queue (phone, message, reference_id, notification_type)
+//               VALUES (
+//                   v_telefone,
+//                   'Olá ' || COALESCE(v_nome, 'Parceiro') || ', uma nova comissão foi calculada para você no valor de R$ ' || COALESCE(NEW.valor_comissao_liquido, 0),
+//                   NEW.id,
+//                   'COMMISSION_ALERT'
+//               );
+//           END IF;
+//       END IF;
+//       RETURN NEW;
+//   END;
+//   $function$
+//
+// FUNCTION trg_notify_new_pedido()
+//   CREATE OR REPLACE FUNCTION public.trg_notify_new_pedido()
+//    RETURNS trigger
+//    LANGUAGE plpgsql
+//   AS $function$
+//   BEGIN
+//       IF NEW.telefone_cliente IS NOT NULL AND NEW.telefone_cliente != '' THEN
+//           INSERT INTO public.notification_queue (phone, message, reference_id, notification_type)
+//           VALUES (
+//               NEW.telefone_cliente,
+//               'Olá ' || COALESCE(NEW.cliente_nome, 'Cliente') || ', seu pedido ' || COALESCE(NEW.numero_pedido, '') || ' foi recebido com sucesso!',
+//               NEW.id,
+//               'ORDER_CONFIRMATION'
+//           );
+//       END IF;
+//       RETURN NEW;
+//   END;
+//   $function$
+//
+
+// --- TRIGGERS ---
+// Table: comissoes
+//   on_comissao_status: CREATE TRIGGER on_comissao_status AFTER INSERT OR UPDATE ON public.comissoes FOR EACH ROW EXECUTE FUNCTION trg_notify_comissao()
+// Table: pedidos
+//   on_new_pedido: CREATE TRIGGER on_new_pedido AFTER INSERT ON public.pedidos FOR EACH ROW EXECUTE FUNCTION trg_notify_new_pedido()
+// Table: status_certificado
+//   on_cert_approval: CREATE TRIGGER on_cert_approval AFTER INSERT OR UPDATE ON public.status_certificado FOR EACH ROW EXECUTE FUNCTION trg_notify_cert_approval()
 
 // --- INDEXES ---
 // Table: Pessoas

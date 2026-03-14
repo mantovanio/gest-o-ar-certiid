@@ -213,7 +213,7 @@ export default function RelatoriosPage() {
                         fontSize={12}
                         tickFormatter={(v) => `R$ ${v}`}
                       />
-                      <Tooltip
+                      <ChartTooltip
                         cursor={{ fill: 'rgba(0,0,0,0.05)' }}
                         content={<ChartTooltipContent />}
                       />
@@ -256,7 +256,7 @@ export default function RelatoriosPage() {
                         fontSize={12}
                         tickFormatter={(v) => `R$ ${v}`}
                       />
-                      <Tooltip
+                      <ChartTooltip
                         cursor={{ fill: 'rgba(0,0,0,0.05)' }}
                         content={<ChartTooltipContent />}
                       />
@@ -295,8 +295,8 @@ export default function RelatoriosPage() {
                           <Cell key={`cell-${index}`} fill={entry.fill} />
                         ))}
                       </Pie>
-                      <Tooltip content={<ChartTooltipContent />} />
-                      <Legend content={<ChartLegendContent />} verticalAlign="bottom" />
+                      <ChartTooltip content={<ChartTooltipContent />} />
+                      <ChartLegend content={<ChartLegendContent />} verticalAlign="bottom" />
                     </PieChart>
                   </ChartContainer>
                 </div>
@@ -337,7 +337,7 @@ export default function RelatoriosPage() {
                         fontSize={12}
                         allowDecimals={false}
                       />
-                      <Tooltip content={<ChartTooltipContent />} />
+                      <ChartTooltip content={<ChartTooltipContent />} />
                       <Line
                         type="monotone"
                         dataKey="count"
