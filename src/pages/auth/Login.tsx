@@ -1,18 +1,19 @@
 import { useState } from 'react'
-import { useNavigate, Link } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { useAuth } from '@/hooks/use-auth'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { toast } from '@/hooks/use-toast'
-import { ShieldCheck, Fingerprint } from 'lucide-react'
+import { ShieldCheck, Fingerprint, Loader2 } from 'lucide-react'
 
 export default function Login() {
-  const [email, setEmail] = useState('admin@gestaocertiid.com')
-  const [password, setPassword] = useState('Admin123!')
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
   const [isLoading, setIsLoading] = useState(false)
-  const { signIn } = useAuth()
+  const [isResetting, setIsResetting] = useState(false)
+  const { signIn, resetPassword } = useAuth()
   const navigate = useNavigate()
 
   const handleLogin = async (e: React.FormEvent) => {
@@ -23,8 +24,8 @@ export default function Login() {
 
     if (error) {
       toast({
-        title: 'Erro ao fazer login',
-        description: error.message,
+        title: 'Falha na autenticação',
+        description: error.message || 'Credenciais inválidas. Tente novamente.',
         variant: 'destructive',
       })
     } else {
@@ -32,10 +33,40 @@ export default function Login() {
         title: 'Login realizado com sucesso',
         description: 'Bem-vindo ao Gestão Certi ID.',
       })
-      navigate('/')
+      navigate('/dashboard')
     }
 
     setIsLoading(false)
+  }
+
+  const handleResetPassword = async (e: React.MouseEvent) => {
+    e.preventDefault()
+    if (!email) {
+      toast({
+        title: 'E-mail obrigatório',
+        description: 'Por favor, informe seu e-mail no campo acima para recuperar a senha.',
+        variant: 'destructive',
+      })
+      return
+    }
+
+    setIsResetting(true)
+    const { error } = await resetPassword(email)
+
+    if (error) {
+      toast({
+        title: 'Erro ao solicitar recuperação',
+        description: error.message || 'Ocorreu um problema ao enviar o e-mail.',
+        variant: 'destructive',
+      })
+    } else {
+      toast({
+        title: 'E-mail enviado',
+        description: 'Verifique sua caixa de entrada para redefinir sua senha.',
+      })
+    }
+
+    setIsResetting(false)
   }
 
   return (
@@ -77,12 +108,14 @@ export default function Login() {
                 <Label htmlFor="password" className="text-slate-700">
                   Senha
                 </Label>
-                <Link
-                  to="#"
-                  className="text-sm font-medium text-blue-600 hover:text-blue-700 hover:underline"
+                <button
+                  type="button"
+                  onClick={handleResetPassword}
+                  disabled={isResetting}
+                  className="text-sm font-medium text-blue-600 hover:text-blue-700 hover:underline disabled:opacity-50 disabled:hover:no-underline"
                 >
-                  Esqueci minha senha
-                </Link>
+                  {isResetting ? 'Enviando...' : 'Esqueci minha senha'}
+                </button>
               </div>
               <Input
                 id="password"
@@ -96,8 +129,9 @@ export default function Login() {
             <Button
               className="w-full mt-6 bg-blue-600 hover:bg-blue-700 text-white shadow-sm transition-colors h-11 text-base font-medium"
               type="submit"
-              disabled={isLoading}
+              disabled={isLoading || isResetting}
             >
+              {isLoading ? <Loader2 className="mr-2 h-5 w-5 animate-spin" /> : null}
               {isLoading ? 'Entrando...' : 'Entrar'}
             </Button>
           </form>
