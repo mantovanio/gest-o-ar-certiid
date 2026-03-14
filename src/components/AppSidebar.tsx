@@ -26,7 +26,7 @@ import { cn } from '@/lib/utils'
 const navigation = [
   { name: 'Dashboard', href: '/', icon: Home },
   { name: 'Clientes', href: '/clientes', icon: Users },
-  { name: 'Pedidos', href: '#pedidos', icon: ShoppingCart },
+  { name: 'Pedidos', href: '/pedidos', icon: ShoppingCart },
   { name: 'Agendamentos', href: '#agendamentos', icon: Calendar },
   { name: 'Comissões', href: '#comissoes', icon: DollarSign },
   { name: 'Chat WhatsApp', href: '#chat', icon: MessageSquare },

@@ -9,6 +9,7 @@ import Layout from '@/components/Layout'
 import Index from '@/pages/Index'
 import Login from '@/pages/auth/Login'
 import ClientesPage from '@/pages/ClientesPage'
+import PedidosPage from '@/pages/PedidosPage'
 
 import PagarReceber from '@/pages/financeiro/PagarReceber'
 import ContasBancarias from '@/pages/financeiro/ContasBancarias'
@@ -37,6 +38,7 @@ const App = () => (
               <Route path="/" element={<Index />} />
               <Route path="/dashboard" element={<Index />} />
               <Route path="/clientes" element={<ClientesPage />} />
+              <Route path="/pedidos" element={<PedidosPage />} />
 
               {/* Keep existing routes to not break previous functionalities */}
               <Route path="/financeiro/pagar-receber" element={<PagarReceber />} />
