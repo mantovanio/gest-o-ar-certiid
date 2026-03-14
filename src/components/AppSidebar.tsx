@@ -28,11 +28,12 @@ const navigation = [
   { name: 'Clientes', href: '/clientes', icon: Users },
   { name: 'Pedidos', href: '/pedidos', icon: ShoppingCart },
   { name: 'Agendamentos', href: '/agendamentos', icon: Calendar },
-  { name: 'Comissões', href: '#comissoes', icon: DollarSign },
+  { name: 'Comissões', href: '/comissoes', icon: DollarSign },
   { name: 'Chat WhatsApp', href: '#chat', icon: MessageSquare },
   { name: 'Relatórios', href: '#relatorios', icon: FileText },
   { name: 'Usuários', href: '#usuarios', icon: UserPlus },
   { name: 'Configurações', href: '#config', icon: Settings },
+  { name: 'Config. Comissões', href: '/configuracao-comissoes', icon: Settings },
 ]
 
 export function AppSidebar() {

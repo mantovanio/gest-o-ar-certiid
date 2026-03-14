@@ -11,6 +11,8 @@ import Login from '@/pages/auth/Login'
 import ClientesPage from '@/pages/ClientesPage'
 import PedidosPage from '@/pages/PedidosPage'
 import AgendamentosPage from '@/pages/AgendamentosPage'
+import ComissoesPage from '@/pages/ComissoesPage'
+import ConfiguracaoComissoesPage from '@/pages/ConfiguracaoComissoesPage'
 
 import PagarReceber from '@/pages/financeiro/PagarReceber'
 import ContasBancarias from '@/pages/financeiro/ContasBancarias'
@@ -41,6 +43,10 @@ const App = () => (
               <Route path="/clientes" element={<ClientesPage />} />
               <Route path="/pedidos" element={<PedidosPage />} />
               <Route path="/agendamentos" element={<AgendamentosPage />} />
+
+              {/* Modulo Comissoes */}
+              <Route path="/comissoes" element={<ComissoesPage />} />
+              <Route path="/configuracao-comissoes" element={<ConfiguracaoComissoesPage />} />
 
               {/* Keep existing routes to not break previous functionalities */}
               <Route path="/financeiro/pagar-receber" element={<PagarReceber />} />
