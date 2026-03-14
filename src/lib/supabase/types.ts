@@ -159,6 +159,175 @@ export type Database = {
         }
         Relationships: []
       }
+      clientes: {
+        Row: {
+          cidade: string | null
+          data_cadastro: string | null
+          documento: string | null
+          email: string | null
+          endereco: string | null
+          id: string
+          nome: string
+          origem: string | null
+          razao_social: string | null
+          status: string | null
+          telefone: string | null
+          uf: string | null
+        }
+        Insert: {
+          cidade?: string | null
+          data_cadastro?: string | null
+          documento?: string | null
+          email?: string | null
+          endereco?: string | null
+          id?: string
+          nome: string
+          origem?: string | null
+          razao_social?: string | null
+          status?: string | null
+          telefone?: string | null
+          uf?: string | null
+        }
+        Update: {
+          cidade?: string | null
+          data_cadastro?: string | null
+          documento?: string | null
+          email?: string | null
+          endereco?: string | null
+          id?: string
+          nome?: string
+          origem?: string | null
+          razao_social?: string | null
+          status?: string | null
+          telefone?: string | null
+          uf?: string | null
+        }
+        Relationships: []
+      }
+      comissoes: {
+        Row: {
+          agente_id: string | null
+          data_calculo: string | null
+          data_pagamento: string | null
+          id: string
+          imposto_retido: number | null
+          observacoes: string | null
+          pedido_id: string | null
+          percentual_comissao: number | null
+          status: string | null
+          valor_comissao_bruto: number | null
+          valor_comissao_liquido: number | null
+          valor_venda: number | null
+          vendedor_id: string | null
+        }
+        Insert: {
+          agente_id?: string | null
+          data_calculo?: string | null
+          data_pagamento?: string | null
+          id?: string
+          imposto_retido?: number | null
+          observacoes?: string | null
+          pedido_id?: string | null
+          percentual_comissao?: number | null
+          status?: string | null
+          valor_comissao_bruto?: number | null
+          valor_comissao_liquido?: number | null
+          valor_venda?: number | null
+          vendedor_id?: string | null
+        }
+        Update: {
+          agente_id?: string | null
+          data_calculo?: string | null
+          data_pagamento?: string | null
+          id?: string
+          imposto_retido?: number | null
+          observacoes?: string | null
+          pedido_id?: string | null
+          percentual_comissao?: number | null
+          status?: string | null
+          valor_comissao_bruto?: number | null
+          valor_comissao_liquido?: number | null
+          valor_venda?: number | null
+          vendedor_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: 'comissoes_agente_id_fkey'
+            columns: ['agente_id']
+            isOneToOne: false
+            referencedRelation: 'usuarios'
+            referencedColumns: ['id']
+          },
+          {
+            foreignKeyName: 'comissoes_pedido_id_fkey'
+            columns: ['pedido_id']
+            isOneToOne: false
+            referencedRelation: 'pedidos'
+            referencedColumns: ['id']
+          },
+          {
+            foreignKeyName: 'comissoes_vendedor_id_fkey'
+            columns: ['vendedor_id']
+            isOneToOne: false
+            referencedRelation: 'usuarios'
+            referencedColumns: ['id']
+          },
+        ]
+      }
+      conversas_whatsapp: {
+        Row: {
+          cliente_id: string | null
+          dados_capturados: Json | null
+          data_mensagem: string | null
+          id: string
+          mensagem: string | null
+          numero_whatsapp: string | null
+          origem: string | null
+          processado: boolean | null
+          tipo: string | null
+          usuario_respondeu_id: string | null
+        }
+        Insert: {
+          cliente_id?: string | null
+          dados_capturados?: Json | null
+          data_mensagem?: string | null
+          id?: string
+          mensagem?: string | null
+          numero_whatsapp?: string | null
+          origem?: string | null
+          processado?: boolean | null
+          tipo?: string | null
+          usuario_respondeu_id?: string | null
+        }
+        Update: {
+          cliente_id?: string | null
+          dados_capturados?: Json | null
+          data_mensagem?: string | null
+          id?: string
+          mensagem?: string | null
+          numero_whatsapp?: string | null
+          origem?: string | null
+          processado?: boolean | null
+          tipo?: string | null
+          usuario_respondeu_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: 'conversas_whatsapp_cliente_id_fkey'
+            columns: ['cliente_id']
+            isOneToOne: false
+            referencedRelation: 'clientes'
+            referencedColumns: ['id']
+          },
+          {
+            foreignKeyName: 'conversas_whatsapp_usuario_respondeu_id_fkey'
+            columns: ['usuario_respondeu_id']
+            isOneToOne: false
+            referencedRelation: 'usuarios'
+            referencedColumns: ['id']
+          },
+        ]
+      }
       crm_agente_ia: {
         Row: {
           created_at: string | null
@@ -420,6 +589,47 @@ export type Database = {
         }
         Relationships: []
       }
+      historico_alteracoes: {
+        Row: {
+          acao: string | null
+          dados_anteriores: Json | null
+          dados_novos: Json | null
+          data_alteracao: string | null
+          id: string
+          registro_id: string | null
+          tabela: string | null
+          usuario_id: string | null
+        }
+        Insert: {
+          acao?: string | null
+          dados_anteriores?: Json | null
+          dados_novos?: Json | null
+          data_alteracao?: string | null
+          id?: string
+          registro_id?: string | null
+          tabela?: string | null
+          usuario_id?: string | null
+        }
+        Update: {
+          acao?: string | null
+          dados_anteriores?: Json | null
+          dados_novos?: Json | null
+          data_alteracao?: string | null
+          id?: string
+          registro_id?: string | null
+          tabela?: string | null
+          usuario_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: 'historico_alteracoes_usuario_id_fkey'
+            columns: ['usuario_id']
+            isOneToOne: false
+            referencedRelation: 'usuarios'
+            referencedColumns: ['id']
+          },
+        ]
+      }
       Itens_Produto: {
         Row: {
           DataValidade: string | null
@@ -617,6 +827,98 @@ export type Database = {
         }
         Relationships: []
       }
+      pedidos: {
+        Row: {
+          agente_id: string | null
+          cliente_id: string | null
+          data_atualizacao: string | null
+          data_criacao: string | null
+          data_pagamento: string | null
+          data_pedido: string | null
+          desconto: number | null
+          id: string
+          numero_nf: string | null
+          numero_pedido: string | null
+          observacoes: string | null
+          produto_id: string | null
+          protocolo_certificadora: string | null
+          status_pagamento: string | null
+          status_pedido: string | null
+          valor_final: number | null
+          valor_venda: number | null
+          vendedor_id: string | null
+        }
+        Insert: {
+          agente_id?: string | null
+          cliente_id?: string | null
+          data_atualizacao?: string | null
+          data_criacao?: string | null
+          data_pagamento?: string | null
+          data_pedido?: string | null
+          desconto?: number | null
+          id?: string
+          numero_nf?: string | null
+          numero_pedido?: string | null
+          observacoes?: string | null
+          produto_id?: string | null
+          protocolo_certificadora?: string | null
+          status_pagamento?: string | null
+          status_pedido?: string | null
+          valor_final?: number | null
+          valor_venda?: number | null
+          vendedor_id?: string | null
+        }
+        Update: {
+          agente_id?: string | null
+          cliente_id?: string | null
+          data_atualizacao?: string | null
+          data_criacao?: string | null
+          data_pagamento?: string | null
+          data_pedido?: string | null
+          desconto?: number | null
+          id?: string
+          numero_nf?: string | null
+          numero_pedido?: string | null
+          observacoes?: string | null
+          produto_id?: string | null
+          protocolo_certificadora?: string | null
+          status_pagamento?: string | null
+          status_pedido?: string | null
+          valor_final?: number | null
+          valor_venda?: number | null
+          vendedor_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: 'pedidos_agente_id_fkey'
+            columns: ['agente_id']
+            isOneToOne: false
+            referencedRelation: 'usuarios'
+            referencedColumns: ['id']
+          },
+          {
+            foreignKeyName: 'pedidos_cliente_id_fkey'
+            columns: ['cliente_id']
+            isOneToOne: false
+            referencedRelation: 'clientes'
+            referencedColumns: ['id']
+          },
+          {
+            foreignKeyName: 'pedidos_produto_id_fkey'
+            columns: ['produto_id']
+            isOneToOne: false
+            referencedRelation: 'produtos'
+            referencedColumns: ['id']
+          },
+          {
+            foreignKeyName: 'pedidos_vendedor_id_fkey'
+            columns: ['vendedor_id']
+            isOneToOne: false
+            referencedRelation: 'usuarios'
+            referencedColumns: ['id']
+          },
+        ]
+      }
       Pedidos: {
         Row: {
           DataPedido: string
@@ -643,6 +945,38 @@ export type Database = {
             isOneToOne: false
             referencedRelation: 'Pessoas'
             referencedColumns: ['ID_Pessoa']
+          },
+        ]
+      }
+      permissoes_usuario: {
+        Row: {
+          data_atualizacao: string | null
+          funcionalidade: string | null
+          id: string
+          permitido: boolean | null
+          usuario_id: string | null
+        }
+        Insert: {
+          data_atualizacao?: string | null
+          funcionalidade?: string | null
+          id?: string
+          permitido?: boolean | null
+          usuario_id?: string | null
+        }
+        Update: {
+          data_atualizacao?: string | null
+          funcionalidade?: string | null
+          id?: string
+          permitido?: boolean | null
+          usuario_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: 'permissoes_usuario_usuario_id_fkey'
+            columns: ['usuario_id']
+            isOneToOne: false
+            referencedRelation: 'usuarios'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -675,6 +1009,77 @@ export type Database = {
           TelefonePrincipal?: string | null
         }
         Relationships: []
+      }
+      produtos: {
+        Row: {
+          ativo: boolean | null
+          descricao: string | null
+          fornecedor_id: string | null
+          id: string
+          nome: string
+          preco_base: number | null
+          tempo_processamento_max: number | null
+          tempo_processamento_min: number | null
+        }
+        Insert: {
+          ativo?: boolean | null
+          descricao?: string | null
+          fornecedor_id?: string | null
+          id?: string
+          nome: string
+          preco_base?: number | null
+          tempo_processamento_max?: number | null
+          tempo_processamento_min?: number | null
+        }
+        Update: {
+          ativo?: boolean | null
+          descricao?: string | null
+          fornecedor_id?: string | null
+          id?: string
+          nome?: string
+          preco_base?: number | null
+          tempo_processamento_max?: number | null
+          tempo_processamento_min?: number | null
+        }
+        Relationships: []
+      }
+      status_certificado: {
+        Row: {
+          data_atualizacao: string | null
+          descricao: string | null
+          etapa: string | null
+          evento: string | null
+          id: string
+          pedido_id: string | null
+          status: string | null
+        }
+        Insert: {
+          data_atualizacao?: string | null
+          descricao?: string | null
+          etapa?: string | null
+          evento?: string | null
+          id?: string
+          pedido_id?: string | null
+          status?: string | null
+        }
+        Update: {
+          data_atualizacao?: string | null
+          descricao?: string | null
+          etapa?: string | null
+          evento?: string | null
+          id?: string
+          pedido_id?: string | null
+          status?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: 'status_certificado_pedido_id_fkey'
+            columns: ['pedido_id']
+            isOneToOne: false
+            referencedRelation: 'pedidos'
+            referencedColumns: ['id']
+          },
+        ]
       }
       stg_importacao_raw: {
         Row: {
@@ -718,6 +1123,87 @@ export type Database = {
           Razao_Social?: string | null
           Status_do_Pedido?: string | null
           Telefone?: string | null
+        }
+        Relationships: []
+      }
+      tabelas_preco: {
+        Row: {
+          ativo: boolean | null
+          data_criacao: string | null
+          id: string
+          nome: string
+          preco_venda: number | null
+          produto_id: string | null
+          usuario_id: string | null
+        }
+        Insert: {
+          ativo?: boolean | null
+          data_criacao?: string | null
+          id?: string
+          nome: string
+          preco_venda?: number | null
+          produto_id?: string | null
+          usuario_id?: string | null
+        }
+        Update: {
+          ativo?: boolean | null
+          data_criacao?: string | null
+          id?: string
+          nome?: string
+          preco_venda?: number | null
+          produto_id?: string | null
+          usuario_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: 'tabelas_preco_produto_id_fkey'
+            columns: ['produto_id']
+            isOneToOne: false
+            referencedRelation: 'produtos'
+            referencedColumns: ['id']
+          },
+          {
+            foreignKeyName: 'tabelas_preco_usuario_id_fkey'
+            columns: ['usuario_id']
+            isOneToOne: false
+            referencedRelation: 'usuarios'
+            referencedColumns: ['id']
+          },
+        ]
+      }
+      usuarios: {
+        Row: {
+          ativo: boolean | null
+          data_criacao: string | null
+          email: string
+          id: string
+          meta_comissao_minima: number | null
+          nome: string
+          percentual_comissao_padrao: number | null
+          senha: string | null
+          tipo_usuario: string | null
+        }
+        Insert: {
+          ativo?: boolean | null
+          data_criacao?: string | null
+          email: string
+          id?: string
+          meta_comissao_minima?: number | null
+          nome: string
+          percentual_comissao_padrao?: number | null
+          senha?: string | null
+          tipo_usuario?: string | null
+        }
+        Update: {
+          ativo?: boolean | null
+          data_criacao?: string | null
+          email?: string
+          id?: string
+          meta_comissao_minima?: number | null
+          nome?: string
+          percentual_comissao_padrao?: number | null
+          senha?: string | null
+          tipo_usuario?: string | null
         }
         Relationships: []
       }
@@ -948,6 +1434,44 @@ export const Constants = {
 //   cpf_agente: text (nullable)
 //   nome_agente: text (nullable)
 //   created_at: timestamp with time zone (nullable, default: now())
+// Table: clientes
+//   id: uuid (not null, default: gen_random_uuid())
+//   documento: text (nullable)
+//   nome: text (not null)
+//   email: text (nullable)
+//   telefone: text (nullable)
+//   razao_social: text (nullable)
+//   endereco: text (nullable)
+//   cidade: text (nullable)
+//   uf: text (nullable)
+//   data_cadastro: timestamp with time zone (nullable, default: timezone('utc'::text, now()))
+//   status: text (nullable)
+//   origem: text (nullable)
+// Table: comissoes
+//   id: uuid (not null, default: gen_random_uuid())
+//   vendedor_id: uuid (nullable)
+//   agente_id: uuid (nullable)
+//   pedido_id: uuid (nullable)
+//   valor_venda: numeric (nullable)
+//   percentual_comissao: numeric (nullable)
+//   valor_comissao_bruto: numeric (nullable)
+//   imposto_retido: numeric (nullable)
+//   valor_comissao_liquido: numeric (nullable)
+//   status: text (nullable)
+//   data_calculo: timestamp with time zone (nullable, default: timezone('utc'::text, now()))
+//   data_pagamento: timestamp with time zone (nullable)
+//   observacoes: text (nullable)
+// Table: conversas_whatsapp
+//   id: uuid (not null, default: gen_random_uuid())
+//   cliente_id: uuid (nullable)
+//   numero_whatsapp: text (nullable)
+//   mensagem: text (nullable)
+//   tipo: text (nullable)
+//   origem: text (nullable)
+//   data_mensagem: timestamp with time zone (nullable, default: timezone('utc'::text, now()))
+//   usuario_respondeu_id: uuid (nullable)
+//   dados_capturados: jsonb (nullable)
+//   processado: boolean (nullable, default: false)
 // Table: crm_agente_ia
 //   id: uuid (not null, default: gen_random_uuid())
 //   identificador_usuario: text (nullable)
@@ -1007,6 +1531,15 @@ export const Constants = {
 //   payee_payer: text (nullable)
 //   payment_method: text (nullable)
 //   created_at: timestamp with time zone (nullable, default: now())
+// Table: historico_alteracoes
+//   id: uuid (not null, default: gen_random_uuid())
+//   tabela: text (nullable)
+//   registro_id: uuid (nullable)
+//   usuario_id: uuid (nullable)
+//   acao: text (nullable)
+//   dados_anteriores: jsonb (nullable)
+//   dados_novos: jsonb (nullable)
+//   data_alteracao: timestamp with time zone (nullable, default: timezone('utc'::text, now()))
 // Table: media_inventory
 //   id: uuid (not null, default: gen_random_uuid())
 //   media_type: text (nullable)
@@ -1055,6 +1588,48 @@ export const Constants = {
 //   conta: text (nullable)
 //   tipo_conta: text (nullable)
 //   created_at: timestamp with time zone (nullable, default: now())
+// Table: pedidos
+//   id: uuid (not null, default: gen_random_uuid())
+//   numero_pedido: text (nullable)
+//   cliente_id: uuid (nullable)
+//   produto_id: uuid (nullable)
+//   vendedor_id: uuid (nullable)
+//   agente_id: uuid (nullable)
+//   data_pedido: timestamp with time zone (nullable, default: timezone('utc'::text, now()))
+//   valor_venda: numeric (nullable)
+//   desconto: numeric (nullable)
+//   valor_final: numeric (nullable)
+//   status_pedido: text (nullable)
+//   status_pagamento: text (nullable)
+//   data_pagamento: timestamp with time zone (nullable)
+//   protocolo_certificadora: text (nullable)
+//   numero_nf: text (nullable)
+//   observacoes: text (nullable)
+//   data_criacao: timestamp with time zone (nullable, default: timezone('utc'::text, now()))
+//   data_atualizacao: timestamp with time zone (nullable, default: timezone('utc'::text, now()))
+// Table: permissoes_usuario
+//   id: uuid (not null, default: gen_random_uuid())
+//   usuario_id: uuid (nullable)
+//   funcionalidade: text (nullable)
+//   permitido: boolean (nullable, default: false)
+//   data_atualizacao: timestamp with time zone (nullable, default: timezone('utc'::text, now()))
+// Table: produtos
+//   id: uuid (not null, default: gen_random_uuid())
+//   nome: text (not null)
+//   descricao: text (nullable)
+//   preco_base: numeric (nullable)
+//   tempo_processamento_min: integer (nullable)
+//   tempo_processamento_max: integer (nullable)
+//   fornecedor_id: uuid (nullable)
+//   ativo: boolean (nullable, default: true)
+// Table: status_certificado
+//   id: uuid (not null, default: gen_random_uuid())
+//   pedido_id: uuid (nullable)
+//   etapa: text (nullable)
+//   status: text (nullable)
+//   data_atualizacao: timestamp with time zone (nullable, default: timezone('utc'::text, now()))
+//   descricao: text (nullable)
+//   evento: text (nullable)
 // Table: stg_importacao_raw
 //   Pedido: text (nullable)
 //   Data_de_Vencimento: text (nullable)
@@ -1068,6 +1643,24 @@ export const Constants = {
 //   CPF: text (nullable)
 //   CNPJ: text (nullable)
 //   Razao_Social: text (nullable)
+// Table: tabelas_preco
+//   id: uuid (not null, default: gen_random_uuid())
+//   nome: text (not null)
+//   usuario_id: uuid (nullable)
+//   produto_id: uuid (nullable)
+//   preco_venda: numeric (nullable)
+//   ativo: boolean (nullable, default: true)
+//   data_criacao: timestamp with time zone (nullable, default: timezone('utc'::text, now()))
+// Table: usuarios
+//   id: uuid (not null, default: gen_random_uuid())
+//   email: text (not null)
+//   senha: text (nullable)
+//   nome: text (not null)
+//   tipo_usuario: text (nullable)
+//   ativo: boolean (nullable, default: true)
+//   meta_comissao_minima: numeric (nullable)
+//   percentual_comissao_padrao: numeric (nullable)
+//   data_criacao: timestamp with time zone (nullable, default: timezone('utc'::text, now()))
 
 // --- CONSTRAINTS ---
 // Table: CRM_geral
@@ -1091,6 +1684,17 @@ export const Constants = {
 // Table: certificates
 //   PRIMARY KEY certificates_pkey: PRIMARY KEY (id)
 //   FOREIGN KEY certificates_user_id_fkey: FOREIGN KEY (user_id) REFERENCES auth.users(id)
+// Table: clientes
+//   PRIMARY KEY clientes_pkey: PRIMARY KEY (id)
+// Table: comissoes
+//   FOREIGN KEY comissoes_agente_id_fkey: FOREIGN KEY (agente_id) REFERENCES usuarios(id)
+//   FOREIGN KEY comissoes_pedido_id_fkey: FOREIGN KEY (pedido_id) REFERENCES pedidos(id)
+//   PRIMARY KEY comissoes_pkey: PRIMARY KEY (id)
+//   FOREIGN KEY comissoes_vendedor_id_fkey: FOREIGN KEY (vendedor_id) REFERENCES usuarios(id)
+// Table: conversas_whatsapp
+//   FOREIGN KEY conversas_whatsapp_cliente_id_fkey: FOREIGN KEY (cliente_id) REFERENCES clientes(id)
+//   PRIMARY KEY conversas_whatsapp_pkey: PRIMARY KEY (id)
+//   FOREIGN KEY conversas_whatsapp_usuario_respondeu_id_fkey: FOREIGN KEY (usuario_respondeu_id) REFERENCES usuarios(id)
 // Table: crm_agente_ia
 //   UNIQUE crm_agente_ia_identificador_usuario_key: UNIQUE (identificador_usuario)
 //   PRIMARY KEY crm_agente_ia_pkey: PRIMARY KEY (id)
@@ -1102,6 +1706,9 @@ export const Constants = {
 //   FOREIGN KEY documents_user_id_fkey: FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE
 // Table: financial_transactions
 //   PRIMARY KEY financial_transactions_pkey: PRIMARY KEY (id)
+// Table: historico_alteracoes
+//   PRIMARY KEY historico_alteracoes_pkey: PRIMARY KEY (id)
+//   FOREIGN KEY historico_alteracoes_usuario_id_fkey: FOREIGN KEY (usuario_id) REFERENCES usuarios(id)
 // Table: media_inventory
 //   PRIMARY KEY media_inventory_pkey: PRIMARY KEY (id)
 // Table: n8n_chat_histories
@@ -1111,6 +1718,27 @@ export const Constants = {
 // Table: partners
 //   PRIMARY KEY partners_pkey: PRIMARY KEY (id)
 //   FOREIGN KEY partners_user_id_fkey: FOREIGN KEY (user_id) REFERENCES auth.users(id)
+// Table: pedidos
+//   FOREIGN KEY pedidos_agente_id_fkey: FOREIGN KEY (agente_id) REFERENCES usuarios(id)
+//   FOREIGN KEY pedidos_cliente_id_fkey: FOREIGN KEY (cliente_id) REFERENCES clientes(id)
+//   PRIMARY KEY pedidos_pkey: PRIMARY KEY (id)
+//   FOREIGN KEY pedidos_produto_id_fkey: FOREIGN KEY (produto_id) REFERENCES produtos(id)
+//   FOREIGN KEY pedidos_vendedor_id_fkey: FOREIGN KEY (vendedor_id) REFERENCES usuarios(id)
+// Table: permissoes_usuario
+//   PRIMARY KEY permissoes_usuario_pkey: PRIMARY KEY (id)
+//   FOREIGN KEY permissoes_usuario_usuario_id_fkey: FOREIGN KEY (usuario_id) REFERENCES usuarios(id)
+// Table: produtos
+//   PRIMARY KEY produtos_pkey: PRIMARY KEY (id)
+// Table: status_certificado
+//   FOREIGN KEY status_certificado_pedido_id_fkey: FOREIGN KEY (pedido_id) REFERENCES pedidos(id)
+//   PRIMARY KEY status_certificado_pkey: PRIMARY KEY (id)
+// Table: tabelas_preco
+//   PRIMARY KEY tabelas_preco_pkey: PRIMARY KEY (id)
+//   FOREIGN KEY tabelas_preco_produto_id_fkey: FOREIGN KEY (produto_id) REFERENCES produtos(id)
+//   FOREIGN KEY tabelas_preco_usuario_id_fkey: FOREIGN KEY (usuario_id) REFERENCES usuarios(id)
+// Table: usuarios
+//   UNIQUE usuarios_email_key: UNIQUE (email)
+//   PRIMARY KEY usuarios_pkey: PRIMARY KEY (id)
 
 // --- ROW LEVEL SECURITY POLICIES ---
 // Table: CRM_geral
@@ -1134,6 +1762,18 @@ export const Constants = {
 // Table: certificates
 //   Policy "Acesso total ao dono dos dados" (ALL, PERMISSIVE) roles={public}
 //     USING: (auth.uid() = user_id)
+// Table: clientes
+//   Policy "Allow authenticated access clientes" (ALL, PERMISSIVE) roles={authenticated}
+//     USING: true
+//     WITH CHECK: true
+// Table: comissoes
+//   Policy "Allow authenticated access comissoes" (ALL, PERMISSIVE) roles={authenticated}
+//     USING: true
+//     WITH CHECK: true
+// Table: conversas_whatsapp
+//   Policy "Allow authenticated access conversas_whatsapp" (ALL, PERMISSIVE) roles={authenticated}
+//     USING: true
+//     WITH CHECK: true
 // Table: crm_agente_ia
 //   Policy "Politica Privacidade AVMD" (ALL, PERMISSIVE) roles={public}
 //     USING: true
@@ -1151,6 +1791,10 @@ export const Constants = {
 // Table: financial_transactions
 //   Policy "Allow all access financial_transactions" (ALL, PERMISSIVE) roles={public}
 //     USING: true
+// Table: historico_alteracoes
+//   Policy "Allow authenticated access historico_alteracoes" (ALL, PERMISSIVE) roles={authenticated}
+//     USING: true
+//     WITH CHECK: true
 // Table: media_inventory
 //   Policy "Allow all access media_inventory" (ALL, PERMISSIVE) roles={public}
 //     USING: true
@@ -1160,6 +1804,30 @@ export const Constants = {
 // Table: partners
 //   Policy "Gerenciar parceiros" (ALL, PERMISSIVE) roles={public}
 //     USING: (auth.uid() = user_id)
+// Table: pedidos
+//   Policy "Allow authenticated access pedidos" (ALL, PERMISSIVE) roles={authenticated}
+//     USING: true
+//     WITH CHECK: true
+// Table: permissoes_usuario
+//   Policy "Allow authenticated access permissoes_usuario" (ALL, PERMISSIVE) roles={authenticated}
+//     USING: true
+//     WITH CHECK: true
+// Table: produtos
+//   Policy "Allow authenticated access produtos" (ALL, PERMISSIVE) roles={authenticated}
+//     USING: true
+//     WITH CHECK: true
+// Table: status_certificado
+//   Policy "Allow authenticated access status_certificado" (ALL, PERMISSIVE) roles={authenticated}
+//     USING: true
+//     WITH CHECK: true
+// Table: tabelas_preco
+//   Policy "Allow authenticated access tabelas_preco" (ALL, PERMISSIVE) roles={authenticated}
+//     USING: true
+//     WITH CHECK: true
+// Table: usuarios
+//   Policy "Allow authenticated access usuarios" (ALL, PERMISSIVE) roles={authenticated}
+//     USING: true
+//     WITH CHECK: true
 
 // --- DATABASE FUNCTIONS ---
 // FUNCTION rls_auto_enable()
@@ -1204,3 +1872,5 @@ export const Constants = {
 //   CREATE UNIQUE INDEX crm_agente_ia_identificador_usuario_key ON public.crm_agente_ia USING btree (identificador_usuario)
 // Table: partner_leads
 //   CREATE UNIQUE INDEX partner_leads_dedup_key_uidx ON public.partner_leads USING btree (dedup_key)
+// Table: usuarios
+//   CREATE UNIQUE INDEX usuarios_email_key ON public.usuarios USING btree (email)
