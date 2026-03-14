@@ -21,14 +21,14 @@ export function AppHeader() {
           className="hidden sm:flex items-center gap-2 text-sm text-green-600 hover:text-green-700 font-medium"
         >
           <Phone className="h-4 w-4" />
-          <span>Atendimento Gestão AR</span>
+          <span>Atendimento Gestão Certi ID</span>
         </a>
 
         <div className="h-6 w-px bg-slate-200 hidden sm:block"></div>
 
         <div className="flex items-center gap-3">
           <div className="hidden md:flex flex-col items-end text-sm">
-            <span className="font-semibold text-slate-700">Administrador AR</span>
+            <span className="font-semibold text-slate-700">Administrador Certi ID</span>
             <span className="text-xs text-slate-500">{user?.email}</span>
           </div>
 

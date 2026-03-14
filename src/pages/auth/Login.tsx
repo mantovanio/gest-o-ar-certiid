@@ -9,7 +9,7 @@ import { toast } from '@/hooks/use-toast'
 import { ShieldCheck, Fingerprint } from 'lucide-react'
 
 export default function Login() {
-  const [email, setEmail] = useState('admin@gestaoar.com')
+  const [email, setEmail] = useState('admin@gestaocertiid.com')
   const [password, setPassword] = useState('Admin123!')
   const [isLoading, setIsLoading] = useState(false)
   const { signIn } = useAuth()
@@ -30,7 +30,7 @@ export default function Login() {
     } else {
       toast({
         title: 'Login realizado com sucesso',
-        description: 'Bem-vindo ao Gestão AR.',
+        description: 'Bem-vindo ao Gestão Certi ID.',
       })
       navigate('/')
     }
@@ -44,7 +44,7 @@ export default function Login() {
         <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-600 shadow-md text-white">
           <Fingerprint className="h-7 w-7" />
         </div>
-        <h1 className="text-3xl font-bold text-slate-800 tracking-tight">Gestão AR</h1>
+        <h1 className="text-3xl font-bold text-slate-800 tracking-tight">Gestão Certi ID</h1>
       </div>
 
       <Card className="w-full max-w-md shadow-lg border-slate-200 bg-white">

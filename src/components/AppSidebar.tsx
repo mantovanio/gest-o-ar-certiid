@@ -46,10 +46,10 @@ export function AppSidebar() {
       <SidebarHeader className="h-16 flex items-center px-4 border-b border-slate-100 bg-white">
         <div className="flex items-center gap-3 overflow-hidden">
           <div className="flex-shrink-0 h-8 w-8 rounded bg-blue-600 flex items-center justify-center text-white font-bold shadow-sm">
-            AR
+            ID
           </div>
           {state === 'expanded' && (
-            <span className="font-bold text-lg text-blue-900 truncate">Gestão AR</span>
+            <span className="font-bold text-lg text-blue-900 truncate">Gestão Certi ID</span>
           )}
         </div>
       </SidebarHeader>
