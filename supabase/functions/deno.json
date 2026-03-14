@@ -6,7 +6,7 @@
     "webhook-comissao-calculada": 4,
     "enviar-para-n8n": 1,
     "enviar-whatsapp-n8n": 4,
-    "functions": 2,
+    "functions": 3,
     "notifications-service": 1
   }
 }
