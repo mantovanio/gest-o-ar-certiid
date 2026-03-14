@@ -1,7 +1,10 @@
 import 'jsr:@supabase/functions-js/edge-runtime.d.ts'
 
 Deno.serve(async () => {
-  return new Response(JSON.stringify({ status: 'ok', message: 'Dummy function' }), {
-    headers: { 'Content-Type': 'application/json' },
-  })
+  return new Response(
+    JSON.stringify({ status: 'ok', message: 'Functions directory placeholder' }),
+    {
+      headers: { 'Content-Type': 'application/json' },
+    },
+  )
 })

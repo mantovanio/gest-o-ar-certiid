@@ -1,12 +1,12 @@
 {
   "_versions": {
     "sincronizar-safeweb": 1,
-    "webhook-novo-pedido": 3,
-    "webhook-status-atualizado": 3,
-    "webhook-comissao-calculada": 3,
+    "webhook-novo-pedido": 4,
+    "webhook-status-atualizado": 4,
+    "webhook-comissao-calculada": 4,
     "enviar-para-n8n": 1,
-    "enviar-whatsapp-n8n": 3,
-    "functions": 1,
+    "enviar-whatsapp-n8n": 4,
+    "functions": 2,
     "notifications-service": 1
   }
 }
