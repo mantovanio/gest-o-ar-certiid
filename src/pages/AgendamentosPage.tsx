@@ -24,6 +24,7 @@ import {
   deletePedido,
 } from '@/services/pedidos'
 import { toast } from '@/hooks/use-toast'
+import { cn } from '@/lib/utils'
 
 export default function AgendamentosPage() {
   const [currentDate, setCurrentDate] = useState(new Date())
@@ -217,19 +218,13 @@ export default function AgendamentosPage() {
             )}
           </div>
 
-          <div className="flex gap-4 items-center justify-center pt-2 text-sm">
-            <div className="flex items-center gap-1.5">
-              <div className="w-3 h-3 rounded-full bg-amber-400"></div>
-              <span className="text-slate-600">Pendente</span>
-            </div>
-            <div className="flex items-center gap-1.5">
-              <div className="w-3 h-3 rounded-full bg-emerald-500"></div>
-              <span className="text-slate-600">Confirmado</span>
-            </div>
-            <div className="flex items-center gap-1.5">
-              <div className="w-3 h-3 rounded-full bg-red-500"></div>
-              <span className="text-slate-600">Cancelado</span>
-            </div>
+          <div className="flex flex-wrap gap-x-6 gap-y-2 items-center justify-center pt-2 text-xs sm:text-sm border-t border-slate-100 mt-2">
+            <LegendItem color="bg-slate-300" label="Pendente" />
+            <LegendItem color="bg-orange-400" label="Aguardando Pagamento" />
+            <LegendItem color="bg-emerald-400" label="Confirmado" />
+            <LegendItem color="bg-purple-400" label="Reagendado" />
+            <LegendItem color="bg-green-700" label="Atendido" />
+            <LegendItem color="bg-red-400" label="Cancelado" />
           </div>
         </CardContent>
       </Card>
@@ -243,6 +238,15 @@ export default function AgendamentosPage() {
         onSave={handleSaveEvent}
         onDelete={handleDeleteEvent}
       />
+    </div>
+  )
+}
+
+function LegendItem({ color, label }: { color: string; label: string }) {
+  return (
+    <div className="flex items-center gap-1.5">
+      <div className={cn('w-3 h-3 rounded-full', color)}></div>
+      <span className="text-slate-600 font-medium">{label}</span>
     </div>
   )
 }

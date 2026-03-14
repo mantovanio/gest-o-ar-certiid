@@ -108,9 +108,8 @@ export function AgendamentoForm({
 
   const agentes = dropdownData.usuarios.filter(
     (u) =>
-      !u.role ||
-      ['agente'].includes(u.role?.toLowerCase()) ||
-      ['agente'].includes(u.tipo_usuario?.toLowerCase()),
+      ['agente'].includes(u.role?.toLowerCase() || '') ||
+      ['agente'].includes(u.tipo_usuario?.toLowerCase() || ''),
   )
 
   return (
@@ -160,13 +159,13 @@ export function AgendamentoForm({
               </Select>
             </div>
             <div className="space-y-1">
-              <Label>Agente</Label>
+              <Label>Agente de Registro</Label>
               <Select
                 value={formData.agente_id}
                 onValueChange={(v) => setFormData({ ...formData, agente_id: v })}
               >
                 <SelectTrigger>
-                  <SelectValue placeholder="Agente..." />
+                  <SelectValue placeholder="Selecione o Agente" />
                 </SelectTrigger>
                 <SelectContent>
                   {agentes.map((a) => (
@@ -210,7 +209,10 @@ export function AgendamentoForm({
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="pendente">Pendente</SelectItem>
-                <SelectItem value="aprovado">Confirmado</SelectItem>
+                <SelectItem value="aguardando pagamento">Aguardando Pagamento</SelectItem>
+                <SelectItem value="confirmado">Confirmado</SelectItem>
+                <SelectItem value="reagendado">Reagendado</SelectItem>
+                <SelectItem value="atendido">Atendido</SelectItem>
                 <SelectItem value="cancelado">Cancelado</SelectItem>
               </SelectContent>
             </Select>

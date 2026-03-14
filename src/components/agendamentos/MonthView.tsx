@@ -10,7 +10,7 @@ import {
   isSameDay,
   parseISO,
 } from 'date-fns'
-import { cn } from '@/lib/utils'
+import { cn, getAgendamentoStatusColor } from '@/lib/utils'
 
 interface MonthViewProps {
   currentDate: Date
@@ -27,13 +27,6 @@ export function MonthView({ currentDate, events, onDateClick, onEventClick }: Mo
   }, [currentDate])
 
   const weekDays = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb']
-
-  const getStatusColor = (status?: string) => {
-    if (status === 'aprovado') return 'bg-emerald-100 text-emerald-800 border-emerald-200'
-    if (status === 'cancelado' || status === 'rejeitado')
-      return 'bg-red-100 text-red-800 border-red-200'
-    return 'bg-amber-100 text-amber-800 border-amber-200'
-  }
 
   return (
     <div className="flex flex-col h-full bg-white rounded-md border border-slate-200 overflow-hidden">
@@ -82,9 +75,9 @@ export function MonthView({ currentDate, events, onDateClick, onEventClick }: Mo
                     onClick={(e) => onEventClick(ev, e)}
                     className={cn(
                       'text-[10px] sm:text-xs px-1.5 py-1 rounded-sm border truncate font-medium',
-                      getStatusColor(ev.status_pedido),
+                      getAgendamentoStatusColor(ev.status_pedido),
                     )}
-                    title={`${ev.cliente?.nome || 'Sem Cliente'} - ${format(parseISO(ev.data_pedido), 'HH:mm')}`}
+                    title={`Cliente: ${ev.cliente?.nome || 'N/A'}\nAgente: ${ev.agente?.nome || 'Não atribuído'}\nHora: ${format(parseISO(ev.data_pedido), 'HH:mm')}`}
                   >
                     {format(parseISO(ev.data_pedido), 'HH:mm')} -{' '}
                     {ev.cliente?.nome?.split(' ')[0] || 'Novo'}

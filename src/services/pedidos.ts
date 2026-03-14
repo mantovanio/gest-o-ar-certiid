@@ -20,9 +20,13 @@ export interface PedidoData {
   cliente?: { nome: string }
   produto?: { nome: string }
   vendedor?: { nome: string }
+  agente?: { nome: string }
 }
 
-export type PedidoFormData = Omit<PedidoData, 'id' | 'cliente' | 'produto' | 'vendedor'> & {
+export type PedidoFormData = Omit<
+  PedidoData,
+  'id' | 'cliente' | 'produto' | 'vendedor' | 'agente'
+> & {
   id?: string
 }
 
@@ -51,7 +55,8 @@ export const getPedidos = async (): Promise<PedidoData[]> => {
       *,
       cliente:clientes!pedidos_cliente_id_fkey(nome),
       produto:produtos!pedidos_produto_id_fkey(nome),
-      vendedor:usuarios!pedidos_vendedor_id_fkey(nome)
+      vendedor:usuarios!pedidos_vendedor_id_fkey(nome),
+      agente:usuarios!pedidos_agente_id_fkey(nome)
     `)
     .order('data_pedido', { ascending: false })
 

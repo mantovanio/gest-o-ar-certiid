@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 import { startOfWeek, endOfWeek, eachDayOfInterval, format, isSameDay, parseISO } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
-import { cn } from '@/lib/utils'
+import { cn, getAgendamentoStatusColor } from '@/lib/utils'
 
 interface WeekViewProps {
   currentDate: Date
@@ -16,13 +16,6 @@ export function WeekView({ currentDate, events, onDateClick, onEventClick }: Wee
     const end = endOfWeek(currentDate, { weekStartsOn: 0 })
     return eachDayOfInterval({ start, end })
   }, [currentDate])
-
-  const getStatusColor = (status?: string) => {
-    if (status === 'aprovado') return 'bg-emerald-100 text-emerald-800 border-emerald-200'
-    if (status === 'cancelado' || status === 'rejeitado')
-      return 'bg-red-100 text-red-800 border-red-200'
-    return 'bg-amber-100 text-amber-800 border-amber-200'
-  }
 
   return (
     <div className="flex flex-col h-full bg-white rounded-md border border-slate-200 overflow-hidden">
@@ -73,13 +66,15 @@ export function WeekView({ currentDate, events, onDateClick, onEventClick }: Wee
                     onClick={(e) => onEventClick(ev, e)}
                     className={cn(
                       'text-xs p-2 rounded-md border cursor-pointer hover:opacity-80 transition-opacity',
-                      getStatusColor(ev.status_pedido),
+                      getAgendamentoStatusColor(ev.status_pedido),
                     )}
                   >
                     <div className="font-semibold">{format(parseISO(ev.data_pedido), 'HH:mm')}</div>
-                    <div className="truncate mt-0.5">{ev.cliente?.nome || 'Sem Cliente'}</div>
-                    <div className="truncate text-[10px] opacity-80 mt-1">
-                      {ev.produto?.nome || ''}
+                    <div className="truncate mt-0.5" title={ev.cliente?.nome}>
+                      {ev.cliente?.nome || 'Sem Cliente'}
+                    </div>
+                    <div className="truncate text-[10px] opacity-80 mt-1" title={ev.agente?.nome}>
+                      Agente: {ev.agente?.nome?.split(' ')[0] || 'N/A'}
                     </div>
                   </div>
                 ))}

@@ -1,7 +1,8 @@
 import { useMemo } from 'react'
 import { format, isSameDay, parseISO } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
-import { cn } from '@/lib/utils'
+import { cn, getAgendamentoStatusColor } from '@/lib/utils'
+import { UserCircle } from 'lucide-react'
 
 interface DayViewProps {
   currentDate: Date
@@ -11,13 +12,6 @@ interface DayViewProps {
 }
 
 export function DayView({ currentDate, events, onDateClick, onEventClick }: DayViewProps) {
-  const getStatusColor = (status?: string) => {
-    if (status === 'aprovado') return 'bg-emerald-100 text-emerald-800 border-emerald-200'
-    if (status === 'cancelado' || status === 'rejeitado')
-      return 'bg-red-100 text-red-800 border-red-200'
-    return 'bg-amber-100 text-amber-800 border-amber-200'
-  }
-
   const dayEvents = useMemo(() => {
     return events
       .filter((ev) => ev.data_pedido && isSameDay(parseISO(ev.data_pedido), currentDate))
@@ -47,7 +41,7 @@ export function DayView({ currentDate, events, onDateClick, onEventClick }: DayV
                 onClick={(e) => onEventClick(ev, e)}
                 className={cn(
                   'p-4 rounded-lg border cursor-pointer hover:shadow-sm transition-all flex flex-col sm:flex-row gap-4 sm:items-center justify-between',
-                  getStatusColor(ev.status_pedido),
+                  getAgendamentoStatusColor(ev.status_pedido),
                 )}
               >
                 <div className="flex items-center gap-4">
@@ -57,18 +51,23 @@ export function DayView({ currentDate, events, onDateClick, onEventClick }: DayV
                   <div className="w-px h-10 bg-black/10 hidden sm:block"></div>
                   <div>
                     <div className="font-bold text-base">{ev.cliente?.nome || 'Sem Cliente'}</div>
-                    <div className="text-sm opacity-90">
-                      {ev.produto?.nome || 'Produto não informado'}
+                    <div className="text-sm opacity-90 flex items-center gap-2 mt-0.5">
+                      <span>{ev.produto?.nome || 'Produto não informado'}</span>
+                      {ev.agente && (
+                        <span className="flex items-center gap-1 opacity-80 text-xs bg-black/5 px-2 py-0.5 rounded-full">
+                          <UserCircle className="w-3 h-3" /> {ev.agente.nome}
+                        </span>
+                      )}
                     </div>
                     {ev.observacoes && (
-                      <div className="text-xs opacity-75 mt-1 line-clamp-1">
+                      <div className="text-xs opacity-75 mt-1.5 line-clamp-1 border-t border-black/5 pt-1.5">
                         {ev.observacoes.split('\n')[0]}
                       </div>
                     )}
                   </div>
                 </div>
                 <div className="flex items-center">
-                  <span className="px-2.5 py-1 bg-black/5 rounded-full text-xs font-semibold capitalize border border-black/5">
+                  <span className="px-3 py-1 bg-black/5 rounded-full text-xs font-semibold capitalize border border-black/5">
                     {ev.status_pedido || 'Pendente'}
                   </span>
                 </div>
