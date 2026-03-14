@@ -5,6 +5,7 @@
     "webhook-status-atualizado": 1,
     "webhook-comissao-calculada": 1,
     "enviar-para-n8n": 1,
-    "enviar-whatsapp-n8n": 1
+    "enviar-whatsapp-n8n": 1,
+    "functions": 1
   }
 }
