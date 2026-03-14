@@ -162,45 +162,60 @@ export type Database = {
       clientes: {
         Row: {
           cidade: string | null
+          cpf_cnpj: string | null
+          created_at: string | null
           data_cadastro: string | null
           documento: string | null
           email: string | null
+          empresa: string | null
           endereco: string | null
           id: string
           nome: string
           origem: string | null
+          ramo_atividade: string | null
           razao_social: string | null
           status: string | null
           telefone: string | null
           uf: string | null
+          updated_at: string | null
         }
         Insert: {
           cidade?: string | null
+          cpf_cnpj?: string | null
+          created_at?: string | null
           data_cadastro?: string | null
           documento?: string | null
           email?: string | null
+          empresa?: string | null
           endereco?: string | null
           id?: string
           nome: string
           origem?: string | null
+          ramo_atividade?: string | null
           razao_social?: string | null
           status?: string | null
           telefone?: string | null
           uf?: string | null
+          updated_at?: string | null
         }
         Update: {
           cidade?: string | null
+          cpf_cnpj?: string | null
+          created_at?: string | null
           data_cadastro?: string | null
           documento?: string | null
           email?: string | null
+          empresa?: string | null
           endereco?: string | null
           id?: string
           nome?: string
           origem?: string | null
+          ramo_atividade?: string | null
           razao_social?: string | null
           status?: string | null
           telefone?: string | null
           uf?: string | null
+          updated_at?: string | null
         }
         Relationships: []
       }
@@ -277,6 +292,7 @@ export type Database = {
       conversas_whatsapp: {
         Row: {
           cliente_id: string | null
+          created_at: string | null
           dados_capturados: Json | null
           data_mensagem: string | null
           id: string
@@ -284,11 +300,14 @@ export type Database = {
           numero_whatsapp: string | null
           origem: string | null
           processado: boolean | null
+          status_leitura: boolean | null
           tipo: string | null
+          tipo_mensagem: string | null
           usuario_respondeu_id: string | null
         }
         Insert: {
           cliente_id?: string | null
+          created_at?: string | null
           dados_capturados?: Json | null
           data_mensagem?: string | null
           id?: string
@@ -296,11 +315,14 @@ export type Database = {
           numero_whatsapp?: string | null
           origem?: string | null
           processado?: boolean | null
+          status_leitura?: boolean | null
           tipo?: string | null
+          tipo_mensagem?: string | null
           usuario_respondeu_id?: string | null
         }
         Update: {
           cliente_id?: string | null
+          created_at?: string | null
           dados_capturados?: Json | null
           data_mensagem?: string | null
           id?: string
@@ -308,7 +330,9 @@ export type Database = {
           numero_whatsapp?: string | null
           origem?: string | null
           processado?: boolean | null
+          status_leitura?: boolean | null
           tipo?: string | null
+          tipo_mensagem?: string | null
           usuario_respondeu_id?: string | null
         }
         Relationships: [
@@ -829,63 +853,153 @@ export type Database = {
       }
       pedidos: {
         Row: {
+          agente_agenda: string | null
           agente_id: string | null
+          agente_registro: string | null
+          ar_solicitacao: string | null
           cliente_id: string | null
+          cliente_nome: string | null
+          created_at: string | null
+          data_agenda: string | null
           data_atualizacao: string | null
           data_criacao: string | null
+          data_nota: string | null
           data_pagamento: string | null
+          data_pagto: string | null
           data_pedido: string | null
+          data_status: string | null
+          data_vencimento: string | null
+          data_venda: string | null
           desconto: number | null
+          doc_cliente: string | null
+          email_cliente: string | null
+          forma_pagamento: string | null
           id: string
+          link_videoconferencia: string | null
+          local_atendimento: string | null
+          mensagem_prefeitura: string | null
           numero_nf: string | null
           numero_pedido: string | null
+          observacao: string | null
           observacoes: string | null
+          produto: string | null
           produto_id: string | null
+          protocolo: string | null
           protocolo_certificadora: string | null
+          status_nota: string | null
           status_pagamento: string | null
           status_pedido: string | null
+          status_venda: string | null
+          tabela_venda: string | null
+          telefone_cliente: string | null
+          tipo_emissao: string | null
+          tipo_venda: string | null
+          token: string | null
+          updated_at: string | null
+          usuario_criacao: string | null
           valor_final: number | null
           valor_venda: number | null
+          vendedor: string | null
           vendedor_id: string | null
         }
         Insert: {
+          agente_agenda?: string | null
           agente_id?: string | null
+          agente_registro?: string | null
+          ar_solicitacao?: string | null
           cliente_id?: string | null
+          cliente_nome?: string | null
+          created_at?: string | null
+          data_agenda?: string | null
           data_atualizacao?: string | null
           data_criacao?: string | null
+          data_nota?: string | null
           data_pagamento?: string | null
+          data_pagto?: string | null
           data_pedido?: string | null
+          data_status?: string | null
+          data_vencimento?: string | null
+          data_venda?: string | null
           desconto?: number | null
+          doc_cliente?: string | null
+          email_cliente?: string | null
+          forma_pagamento?: string | null
           id?: string
+          link_videoconferencia?: string | null
+          local_atendimento?: string | null
+          mensagem_prefeitura?: string | null
           numero_nf?: string | null
           numero_pedido?: string | null
+          observacao?: string | null
           observacoes?: string | null
+          produto?: string | null
           produto_id?: string | null
+          protocolo?: string | null
           protocolo_certificadora?: string | null
+          status_nota?: string | null
           status_pagamento?: string | null
           status_pedido?: string | null
+          status_venda?: string | null
+          tabela_venda?: string | null
+          telefone_cliente?: string | null
+          tipo_emissao?: string | null
+          tipo_venda?: string | null
+          token?: string | null
+          updated_at?: string | null
+          usuario_criacao?: string | null
           valor_final?: number | null
           valor_venda?: number | null
+          vendedor?: string | null
           vendedor_id?: string | null
         }
         Update: {
+          agente_agenda?: string | null
           agente_id?: string | null
+          agente_registro?: string | null
+          ar_solicitacao?: string | null
           cliente_id?: string | null
+          cliente_nome?: string | null
+          created_at?: string | null
+          data_agenda?: string | null
           data_atualizacao?: string | null
           data_criacao?: string | null
+          data_nota?: string | null
           data_pagamento?: string | null
+          data_pagto?: string | null
           data_pedido?: string | null
+          data_status?: string | null
+          data_vencimento?: string | null
+          data_venda?: string | null
           desconto?: number | null
+          doc_cliente?: string | null
+          email_cliente?: string | null
+          forma_pagamento?: string | null
           id?: string
+          link_videoconferencia?: string | null
+          local_atendimento?: string | null
+          mensagem_prefeitura?: string | null
           numero_nf?: string | null
           numero_pedido?: string | null
+          observacao?: string | null
           observacoes?: string | null
+          produto?: string | null
           produto_id?: string | null
+          protocolo?: string | null
           protocolo_certificadora?: string | null
+          status_nota?: string | null
           status_pagamento?: string | null
           status_pedido?: string | null
+          status_venda?: string | null
+          tabela_venda?: string | null
+          telefone_cliente?: string | null
+          tipo_emissao?: string | null
+          tipo_venda?: string | null
+          token?: string | null
+          updated_at?: string | null
+          usuario_criacao?: string | null
           valor_final?: number | null
           valor_venda?: number | null
+          vendedor?: string | null
           vendedor_id?: string | null
         }
         Relationships: [
@@ -1174,36 +1288,48 @@ export type Database = {
       usuarios: {
         Row: {
           ativo: boolean | null
+          created_at: string | null
           data_criacao: string | null
           email: string
           id: string
           meta_comissao_minima: number | null
           nome: string
           percentual_comissao_padrao: number | null
+          role: string | null
           senha: string | null
+          status: boolean | null
           tipo_usuario: string | null
+          updated_at: string | null
         }
         Insert: {
           ativo?: boolean | null
+          created_at?: string | null
           data_criacao?: string | null
           email: string
           id?: string
           meta_comissao_minima?: number | null
           nome: string
           percentual_comissao_padrao?: number | null
+          role?: string | null
           senha?: string | null
+          status?: boolean | null
           tipo_usuario?: string | null
+          updated_at?: string | null
         }
         Update: {
           ativo?: boolean | null
+          created_at?: string | null
           data_criacao?: string | null
           email?: string
           id?: string
           meta_comissao_minima?: number | null
           nome?: string
           percentual_comissao_padrao?: number | null
+          role?: string | null
           senha?: string | null
+          status?: boolean | null
           tipo_usuario?: string | null
+          updated_at?: string | null
         }
         Relationships: []
       }
@@ -1444,9 +1570,14 @@ export const Constants = {
 //   endereco: text (nullable)
 //   cidade: text (nullable)
 //   uf: text (nullable)
-//   data_cadastro: timestamp with time zone (nullable, default: timezone('utc'::text, now()))
+//   data_cadastro: date (nullable, default: timezone('utc'::text, now()))
 //   status: text (nullable)
 //   origem: text (nullable)
+//   cpf_cnpj: text (nullable)
+//   empresa: text (nullable)
+//   ramo_atividade: text (nullable)
+//   created_at: timestamp with time zone (nullable, default: timezone('utc'::text, now()))
+//   updated_at: timestamp with time zone (nullable, default: timezone('utc'::text, now()))
 // Table: comissoes
 //   id: uuid (not null, default: gen_random_uuid())
 //   vendedor_id: uuid (nullable)
@@ -1472,6 +1603,9 @@ export const Constants = {
 //   usuario_respondeu_id: uuid (nullable)
 //   dados_capturados: jsonb (nullable)
 //   processado: boolean (nullable, default: false)
+//   tipo_mensagem: text (nullable)
+//   status_leitura: boolean (nullable, default: false)
+//   created_at: timestamp with time zone (nullable, default: timezone('utc'::text, now()))
 // Table: crm_agente_ia
 //   id: uuid (not null, default: gen_random_uuid())
 //   identificador_usuario: text (nullable)
@@ -1607,6 +1741,36 @@ export const Constants = {
 //   observacoes: text (nullable)
 //   data_criacao: timestamp with time zone (nullable, default: timezone('utc'::text, now()))
 //   data_atualizacao: timestamp with time zone (nullable, default: timezone('utc'::text, now()))
+//   protocolo: text (nullable)
+//   tipo_emissao: text (nullable)
+//   tipo_venda: text (nullable)
+//   status_venda: text (nullable)
+//   data_status: date (nullable)
+//   forma_pagamento: text (nullable)
+//   produto: text (nullable)
+//   data_agenda: date (nullable)
+//   agente_agenda: text (nullable)
+//   doc_cliente: text (nullable)
+//   cliente_nome: text (nullable)
+//   tabela_venda: text (nullable)
+//   link_videoconferencia: text (nullable)
+//   data_venda: date (nullable)
+//   data_vencimento: date (nullable)
+//   data_pagto: date (nullable)
+//   status_nota: text (nullable)
+//   observacao: text (nullable)
+//   email_cliente: text (nullable)
+//   telefone_cliente: text (nullable)
+//   data_nota: date (nullable)
+//   mensagem_prefeitura: text (nullable)
+//   vendedor: text (nullable)
+//   local_atendimento: text (nullable)
+//   agente_registro: text (nullable)
+//   usuario_criacao: text (nullable)
+//   ar_solicitacao: text (nullable)
+//   token: text (nullable)
+//   created_at: timestamp with time zone (nullable, default: timezone('utc'::text, now()))
+//   updated_at: timestamp with time zone (nullable, default: timezone('utc'::text, now()))
 // Table: permissoes_usuario
 //   id: uuid (not null, default: gen_random_uuid())
 //   usuario_id: uuid (nullable)
@@ -1661,6 +1825,10 @@ export const Constants = {
 //   meta_comissao_minima: numeric (nullable)
 //   percentual_comissao_padrao: numeric (nullable)
 //   data_criacao: timestamp with time zone (nullable, default: timezone('utc'::text, now()))
+//   role: text (nullable)
+//   status: boolean (nullable, default: true)
+//   created_at: timestamp with time zone (nullable, default: timezone('utc'::text, now()))
+//   updated_at: timestamp with time zone (nullable, default: timezone('utc'::text, now()))
 
 // --- CONSTRAINTS ---
 // Table: CRM_geral
@@ -1693,7 +1861,9 @@ export const Constants = {
 //   FOREIGN KEY comissoes_vendedor_id_fkey: FOREIGN KEY (vendedor_id) REFERENCES usuarios(id)
 // Table: conversas_whatsapp
 //   FOREIGN KEY conversas_whatsapp_cliente_id_fkey: FOREIGN KEY (cliente_id) REFERENCES clientes(id)
+//   CHECK conversas_whatsapp_origem_check: CHECK ((origem = ANY (ARRAY['chatwoot'::text, 'evolution'::text]))) NOT VALID
 //   PRIMARY KEY conversas_whatsapp_pkey: PRIMARY KEY (id)
+//   CHECK conversas_whatsapp_tipo_mensagem_check: CHECK ((tipo_mensagem = ANY (ARRAY['entrada'::text, 'saida'::text])))
 //   FOREIGN KEY conversas_whatsapp_usuario_respondeu_id_fkey: FOREIGN KEY (usuario_respondeu_id) REFERENCES usuarios(id)
 // Table: crm_agente_ia
 //   UNIQUE crm_agente_ia_identificador_usuario_key: UNIQUE (identificador_usuario)
@@ -1739,6 +1909,7 @@ export const Constants = {
 // Table: usuarios
 //   UNIQUE usuarios_email_key: UNIQUE (email)
 //   PRIMARY KEY usuarios_pkey: PRIMARY KEY (id)
+//   CHECK usuarios_role_check: CHECK ((role = ANY (ARRAY['admin'::text, 'agente'::text, 'gerente'::text])))
 
 // --- ROW LEVEL SECURITY POLICIES ---
 // Table: CRM_geral
