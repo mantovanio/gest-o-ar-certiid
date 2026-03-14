@@ -18,6 +18,7 @@ import ConfiguracaoComissoesPage from '@/pages/ConfiguracaoComissoesPage'
 import UsuariosPage from '@/pages/usuarios/UsuariosPage'
 import PermissoesPage from '@/pages/configuracoes/PermissoesPage'
 import TabelasPrecoPage from '@/pages/configuracoes/TabelasPreco'
+import RelatoriosPage from '@/pages/RelatoriosPage'
 
 import PagarReceber from '@/pages/financeiro/PagarReceber'
 import ContasBancarias from '@/pages/financeiro/ContasBancarias'
@@ -97,6 +98,15 @@ const App = () => (
                   element={
                     <RequirePermission permissions={['metas_comissao']}>
                       <ConfiguracaoComissoesPage />
+                    </RequirePermission>
+                  }
+                />
+
+                <Route
+                  path="/relatorios"
+                  element={
+                    <RequirePermission permissions={['ver_relatorios']}>
+                      <RelatoriosPage />
                     </RequirePermission>
                   }
                 />
