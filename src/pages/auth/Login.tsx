@@ -66,20 +66,6 @@ export default function Login() {
       }
     }
 
-    if (error) {
-      toast({
-        title: 'Falha na autenticação',
-        description: error.message || 'Credenciais inválidas. Tente novamente.',
-        variant: 'destructive',
-      })
-    } else {
-      toast({
-        title: 'Login realizado com sucesso',
-        description: 'Bem-vindo ao Gestão Certi ID.',
-      })
-      navigate('/dashboard')
-    }
-
     setIsLoading(false)
   }
 
