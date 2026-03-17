@@ -22,51 +22,76 @@ export default function Login() {
     e.preventDefault()
     setIsLoading(true)
 
-    if (isSignUp) {
-      if (!name) {
-        toast({
-          title: 'Nome obrigatório',
-          description: 'Por favor, informe seu nome completo.',
-          variant: 'destructive',
-        })
-        setIsLoading(false)
-        return
-      }
+    try {
+      if (isSignUp) {
+        if (!name) {
+          toast({
+            title: 'Nome obrigatório',
+            description: 'Por favor, informe seu nome completo.',
+            variant: 'destructive',
+          })
+          return
+        }
 
-      const { error } = await signUp(email, password, name)
-      if (error) {
-        toast({
-          title: 'Falha no cadastro',
-          description: error.message || 'Verifique os dados informados.',
-          variant: 'destructive',
-        })
+        const { error } = await signUp(email, password, name)
+        if (error) {
+          let msg = 'Verifique os dados informados.'
+          if (error.message?.includes('email_address_invalid') || error.message?.includes('invalid')) {
+            msg = 'E-mail inválido. Use um endereço de e-mail válido (ex: nome@gmail.com).'
+          } else if (error.message?.includes('weak_password') || error.message?.includes('Password')) {
+            msg = 'Senha muito fraca. Use pelo menos 6 caracteres com letras e números.'
+          } else if (error.message?.includes('already registered') || error.message?.includes('exists')) {
+            msg = 'Este e-mail já está cadastrado. Tente fazer login.'
+          } else if (error.message) {
+            msg = error.message
+          }
+          toast({
+            title: 'Falha no cadastro',
+            description: msg,
+            variant: 'destructive',
+          })
+        } else {
+          toast({
+            title: 'Conta criada com sucesso!',
+            description: 'Você já pode acessar o sistema com recursos iniciais. O Administrador irá liberar os recursos completos.',
+          })
+          setIsSignUp(false)
+          setPassword('')
+        }
       } else {
-        toast({
-          title: 'Conta criada com sucesso!',
-          description: 'Você já pode acessar o sistema com recursos iniciais. O Administrador irá liberar os recursos completos.',
-        })
-        setIsSignUp(false)
-        setPassword('')
-      }
-    } else {
-      const { error } = await signIn(email, password)
+        const { error } = await signIn(email, password)
 
-      if (error) {
-        toast({
-          title: 'Falha na autenticação',
-          description: error.message || 'Credenciais inválidas. Tente novamente.',
-          variant: 'destructive',
-        })
-      } else {
-        toast({
-          title: 'Login realizado com sucesso',
-          description: 'Bem-vindo ao Gestão Certi ID.',
-        })
-        navigate('/dashboard')
+        if (error) {
+          let msg = 'Credenciais inválidas. Verifique seu e-mail e senha.'
+          if (error.message?.includes('Invalid login') || error.message?.includes('invalid_credentials')) {
+            msg = 'E-mail ou senha incorretos. Verifique e tente novamente.'
+          } else if (error.message?.includes('Email not confirmed')) {
+            msg = 'Seu e-mail ainda não foi confirmado. Verifique sua caixa de entrada.'
+          } else if (error.message) {
+            msg = error.message
+          }
+          toast({
+            title: 'Falha na autenticação',
+            description: msg,
+            variant: 'destructive',
+          })
+        } else {
+          toast({
+            title: 'Login realizado com sucesso',
+            description: 'Bem-vindo ao Gestão Certi ID.',
+          })
+          navigate('/dashboard')
+        }
       }
+    } catch (err: any) {
+      toast({
+        title: 'Erro inesperado',
+        description: 'Ocorreu um problema. Tente novamente.',
+        variant: 'destructive',
+      })
+    } finally {
+      setIsLoading(false)
     }
-
-    setIsLoading(false)
   }
 
   const handleResetPassword = async (e: React.MouseEvent) => {
