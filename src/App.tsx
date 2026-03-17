@@ -136,18 +136,81 @@ const App = () => (
                   }
                 />
 
-                <Route path="/financeiro/pagar-receber" element={<PagarReceber />} />
-                <Route path="/financeiro/contas-bancarias" element={<ContasBancarias />} />
+                <Route
+                  path="/financeiro/pagar-receber"
+                  element={
+                    <RequirePermission permissions={['financeiro', 'admin']}>
+                      <PagarReceber />
+                    </RequirePermission>
+                  }
+                />
+                <Route
+                  path="/financeiro/contas-bancarias"
+                  element={
+                    <RequirePermission permissions={['financeiro', 'admin']}>
+                      <ContasBancarias />
+                    </RequirePermission>
+                  }
+                />
 
-                <Route path="/vendas/clientes" element={<Clientes />} />
-                <Route path="/vendas/renovacoes" element={<Renovacoes />} />
-                <Route path="/vendas/certificados" element={<CertificadosEmitidos />} />
+                <Route
+                  path="/vendas/clientes"
+                  element={
+                    <RequirePermission permissions={['ver_clientes']}>
+                      <Clientes />
+                    </RequirePermission>
+                  }
+                />
+                <Route
+                  path="/vendas/renovacoes"
+                  element={
+                    <RequirePermission permissions={['ver_pedidos']}>
+                      <Renovacoes />
+                    </RequirePermission>
+                  }
+                />
+                <Route
+                  path="/vendas/certificados"
+                  element={
+                    <RequirePermission permissions={['ver_pedidos']}>
+                      <CertificadosEmitidos />
+                    </RequirePermission>
+                  }
+                />
 
-                <Route path="/graficos/vendas" element={<VendasGraficos />} />
-                <Route path="/graficos/financeiro" element={<FinanceiroGraficos />} />
+                <Route
+                  path="/graficos/vendas"
+                  element={
+                    <RequirePermission permissions={['ver_relatorios']}>
+                      <VendasGraficos />
+                    </RequirePermission>
+                  }
+                />
+                <Route
+                  path="/graficos/financeiro"
+                  element={
+                    <RequirePermission permissions={['ver_relatorios', 'financeiro']}>
+                      <FinanceiroGraficos />
+                    </RequirePermission>
+                  }
+                />
 
-                <Route path="/configuracoes/entrada-midias" element={<EntradaMidias />} />
-                <Route path="/configuracoes/notificacoes" element={<NotificacoesLog />} />
+                <Route
+                  path="/configuracoes/entrada-midias"
+                  element={
+                    <RequirePermission permissions={['admin']}>
+                      <EntradaMidias />
+                    </RequirePermission>
+                  }
+                />
+                <Route
+                  path="/configuracoes/notificacoes"
+                  element={
+                    <RequirePermission permissions={['admin']}>
+                      <NotificacoesLog />
+                    </RequirePermission>
+                  }
+                />
               </Route>
             </Route>
 

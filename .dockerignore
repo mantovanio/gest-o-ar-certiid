@@ -1,0 +1,24 @@
+# Dependências
+node_modules/
+.pnpm-store/
+
+# Arquivos de Build anteriores
+dev-dist/
+dist/
+
+# Env e Git
+.env
+.git/
+.gitignore
+
+# Outros
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+.idea/
+.vscode/
+
+# Logs de supabase/docker
+supabase/

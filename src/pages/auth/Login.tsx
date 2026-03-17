@@ -11,16 +11,60 @@ import { ShieldCheck, Fingerprint, Loader2 } from 'lucide-react'
 export default function Login() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [name, setName] = useState('')
+  const [isSignUp, setIsSignUp] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [isResetting, setIsResetting] = useState(false)
-  const { signIn, resetPassword } = useAuth()
+  const { signIn, signUp, resetPassword } = useAuth()
   const navigate = useNavigate()
 
-  const handleLogin = async (e: React.FormEvent) => {
+  const handleAuth = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsLoading(true)
 
-    const { error } = await signIn(email, password)
+    if (isSignUp) {
+      if (!name) {
+        toast({
+          title: 'Nome obrigatório',
+          description: 'Por favor, informe seu nome completo.',
+          variant: 'destructive',
+        })
+        setIsLoading(false)
+        return
+      }
+
+      const { error } = await signUp(email, password, name)
+      if (error) {
+        toast({
+          title: 'Falha no cadastro',
+          description: error.message || 'Verifique os dados informados.',
+          variant: 'destructive',
+        })
+      } else {
+        toast({
+          title: 'Conta criada com sucesso!',
+          description: 'Você já pode acessar o sistema com recursos iniciais. O Administrador irá liberar os recursos completos.',
+        })
+        setIsSignUp(false)
+        setPassword('')
+      }
+    } else {
+      const { error } = await signIn(email, password)
+
+      if (error) {
+        toast({
+          title: 'Falha na autenticação',
+          description: error.message || 'Credenciais inválidas. Tente novamente.',
+          variant: 'destructive',
+        })
+      } else {
+        toast({
+          title: 'Login realizado com sucesso',
+          description: 'Bem-vindo ao Gestão Certi ID.',
+        })
+        navigate('/dashboard')
+      }
+    }
 
     if (error) {
       toast({
@@ -81,14 +125,30 @@ export default function Login() {
       <Card className="w-full max-w-md shadow-lg border-slate-200 bg-white">
         <CardHeader className="space-y-1 text-center pb-6">
           <CardTitle className="text-2xl font-semibold tracking-tight text-slate-900">
-            Acesso ao Sistema
+            {isSignUp ? 'Criar Nova Conta' : 'Acesso ao Sistema'}
           </CardTitle>
           <CardDescription className="text-slate-500">
-            Insira suas credenciais para acessar a plataforma.
+            {isSignUp ? 'Preencha seus dados para se cadastrar.' : 'Insira suas credenciais para acessar a plataforma.'}
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleLogin} className="space-y-5">
+          <form onSubmit={handleAuth} className="space-y-5">
+            {isSignUp && (
+              <div className="space-y-2">
+                <Label htmlFor="name" className="text-slate-700">
+                  Nome Completo
+                </Label>
+                <Input
+                  id="name"
+                  type="text"
+                  placeholder="Seu nome"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  required={isSignUp}
+                  className="border-slate-300 focus-visible:ring-blue-500"
+                />
+              </div>
+            )}
             <div className="space-y-2">
               <Label htmlFor="email" className="text-slate-700">
                 E-mail
@@ -108,14 +168,16 @@ export default function Login() {
                 <Label htmlFor="password" className="text-slate-700">
                   Senha
                 </Label>
-                <button
-                  type="button"
-                  onClick={handleResetPassword}
-                  disabled={isResetting}
-                  className="text-sm font-medium text-blue-600 hover:text-blue-700 hover:underline disabled:opacity-50 disabled:hover:no-underline"
-                >
-                  {isResetting ? 'Enviando...' : 'Esqueci minha senha'}
-                </button>
+                {!isSignUp && (
+                  <button
+                    type="button"
+                    onClick={handleResetPassword}
+                    disabled={isResetting}
+                    className="text-sm font-medium text-blue-600 hover:text-blue-700 hover:underline disabled:opacity-50 disabled:hover:no-underline"
+                  >
+                    {isResetting ? 'Enviando...' : 'Esqueci minha senha'}
+                  </button>
+                )}
               </div>
               <Input
                 id="password"
@@ -132,9 +194,23 @@ export default function Login() {
               disabled={isLoading || isResetting}
             >
               {isLoading ? <Loader2 className="mr-2 h-5 w-5 animate-spin" /> : null}
-              {isLoading ? 'Entrando...' : 'Entrar'}
+              {isLoading ? (isSignUp ? 'Criando conta...' : 'Entrando...') : (isSignUp ? 'Criar Conta' : 'Entrar')}
             </Button>
           </form>
+
+          <div className="mt-5 text-center text-sm text-slate-600">
+            {isSignUp ? 'Já possui uma conta?' : 'Ainda não possui conta?'}
+            <button
+              type="button"
+              onClick={() => {
+                setIsSignUp(!isSignUp)
+                setName('')
+              }}
+              className="ml-1 font-medium text-blue-600 hover:text-blue-700 hover:underline"
+            >
+              {isSignUp ? 'Faça login' : 'Criar agora'}
+            </button>
+          </div>
         </CardContent>
       </Card>
 
