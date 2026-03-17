@@ -1,1 +1,40 @@
+# ---- Estágio 1: Build ----
+# Usamos uma imagem oficial do Node.js como base para o build.
+# A tag 'lts' se refere à versão Long-Term Support, que é estável.
+FROM node:18-alpine AS builder
 
+# Define o diretório de trabalho dentro do contêiner.
+WORKDIR /app
+
+# Copia o package.json e package-lock.json para o contêiner.
+# Copiamos estes primeiro para aproveitar o cache do Docker.
+COPY package*.json ./
+
+# Instala as dependências do projeto.
+RUN npm install
+
+# Copia todo o resto do código-fonte para o contêiner.
+COPY . .
+
+# Executa o script de build para produção.
+# Isso vai gerar a pasta /app/dist/ com os arquivos estáticos.
+RUN npm run build
+
+# ---- Estágio 2: Produção ----
+# Agora usamos uma imagem super leve do Nginx para servir os arquivos.
+FROM nginx:1.25-alpine
+
+# Remove a configuração padrão do Nginx.
+RUN rm /etc/nginx/conf.d/default.conf
+
+# Copia nossa configuração personalizada do Nginx (que criaremos no próximo passo).
+COPY nginx.conf /etc/nginx/conf.d/
+
+# Copia os arquivos da build (do estágio 'builder') para a pasta web-root do Nginx.
+COPY --from=builder /app/dist /usr/share/nginx/html
+
+# Expõe a porta 80, que é a porta padrão do Nginx.
+EXPOSE 80
+
+# Comando para iniciar o Nginx quando o contêiner for executado.
+CMD ["nginx", "-g", "daemon off;"]
