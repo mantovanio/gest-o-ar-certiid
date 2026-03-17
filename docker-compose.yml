@@ -4,11 +4,17 @@ services:
   # Nome do serviço no docker
   frontend:
     # Manda construir e ler o arquivo "Dockerfile" na mesma pasta
-    build: .
-    # Liga a porta 80 do Container (onde o Nginx está) para a porta 8080 do seu PC
+    build:
+      context: .
+      dockerfile: Dockerfile
+      # Passa as credenciais do Supabase para dentro do build
+      args:
+        VITE_SUPABASE_URL: https://gikcraaqjwyfucqgwzfx.supabase.co
+        VITE_SUPABASE_PUBLISHABLE_KEY: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imdpa2NyYWFxand5ZnVjcWd3emZ4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjU5OTU4MjAsImV4cCI6MjA4MTU3MTgyMH0._rl_po4Pc1N-VaqcnfEy8OEd3DlGSgRsqgbq7-8o5Hg
+    # Liga a porta 80 do Container (onde o Nginx está) para a porta 8080 do servidor
     ports:
       - "8080:80"
-    # Faz com que o contêiner sempre reinicie se seu computador desligar (automaticamente online)
+    # Faz com que o contêiner sempre reinicie automaticamente
     restart: unless-stopped
     # Dá um nome amistoso para ele na lista de containers do Docker Desktop
     container_name: gestao-ar-certiid-app

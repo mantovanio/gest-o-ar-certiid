@@ -19,6 +19,14 @@ RUN pnpm install --frozen-lockfile
 # Copia o resto do código da sua máquina para dentro do Docker
 COPY . .
 
+# Recebe as variáveis secretas do Supabase passadas pelo docker-compose
+ARG VITE_SUPABASE_URL
+ARG VITE_SUPABASE_PUBLISHABLE_KEY
+
+# Expõe as variáveis para o Vite usar durante a compilação
+ENV VITE_SUPABASE_URL=$VITE_SUPABASE_URL
+ENV VITE_SUPABASE_PUBLISHABLE_KEY=$VITE_SUPABASE_PUBLISHABLE_KEY
+
 # Roda o comando de compilação do Vite
 # Isso vai gerar a pasta com site "mastigado" e leve.
 RUN pnpm run build
